@@ -79,7 +79,7 @@ public class ClientsController implements Initializable {
         column3.setCellValueFactory(new MapValueFactory("3"));
         column4.setCellValueFactory(new MapValueFactory("4"));
         allData = FXCollections.observableArrayList();
-        allData.addListener((ListChangeListener<Map>) pChange -> {
+        allData.addListener((ListChangeListener<Map>) change -> {
             if(allData.size()==18)
             {
                 column1.setPrefWidth(110);

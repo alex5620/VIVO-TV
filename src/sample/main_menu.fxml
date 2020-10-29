@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <style>
+       -fx-background-color:  rgba(0,161,244,0.2);
+       -fx-border-color: rgba(0,0,0,0.15);
+   </style>
+    <children>
+      <ImageView fitHeight="182.0" fitWidth="280.0" layoutX="334.0" layoutY="6.0">
+         <image>
+            <Image url="@../resources/vivotv.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="packButton" focusTraversable="false" layoutX="375.0" layoutY="363.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Pachete TV">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="clientsButton" focusTraversable="false" layoutX="375.0" layoutY="226.0" mnemonicParsing="false" onAction="#switchToClientsScene" prefHeight="50.0" prefWidth="150.0" text="Clienţi">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="aboutButton" focusTraversable="false" layoutX="375.0" layoutY="430.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Despre">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="exitButton" focusTraversable="false" layoutX="375.0" layoutY="515.0" mnemonicParsing="false" onAction="#stopApplication" prefHeight="50.0" prefWidth="150.0" text="Ieşire">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="137.0" fitWidth="204.0" layoutX="696.0" layoutY="480.0">
+         <image>
+            <Image url="@../resources/tv.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="subButton" focusTraversable="false" layoutX="375.0" layoutY="295.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Abonamente">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>

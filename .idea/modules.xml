@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/VIVO TV.iml" filepath="$PROJECT_DIR$/.idea/VIVO TV.iml" />
+      <module fileurl="file://$PROJECT_DIR$/VIVO TV.iml" filepath="$PROJECT_DIR$/VIVO TV.iml" />
     </modules>
   </component>
 </project>

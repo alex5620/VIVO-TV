@@ -31,7 +31,19 @@ public class Controller implements Initializable {
     @FXML
     private void switchToClientsScene()
     {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("clients_menu.fxml"));
+        switchTheScene("clients_menu.fxml");
+    }
+
+    @FXML
+    private void switchToSubScene()
+    {
+        switchTheScene("sub_menu.fxml");
+    }
+
+    @FXML
+    private void switchTheScene(String fmxlName)
+    {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fmxlName));
         try {
             loader.load();
         } catch (IOException e) {

@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -25,7 +23,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ClientsController implements Initializable {
+public class SubController implements Initializable {
     @FXML private Pane pane;
     @FXML private Button backButton, addButton, removeButton, modifyButton;
     @FXML private Label infoIcon;
@@ -33,8 +31,8 @@ public class ClientsController implements Initializable {
     @FXML private TextField textField;
     @FXML private Pagination pagination;
     @FXML private TableView<ClientData> table;
+    @FXML private TableColumn<ClientData, String> column2, column3, column4;
     @FXML private TableColumn<ClientData, Integer> column1;
-    @FXML private TableColumn<ClientData, String> column2, column3, column4, column5;
     private FilteredList<ClientData> filteredList;
 
     @FXML
@@ -116,7 +114,7 @@ public class ClientsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTable();
+        createTable();
         initButtons();
         initInfoIcon();
         initToggleGroup();
@@ -137,6 +135,7 @@ public class ClientsController implements Initializable {
                 {
                     String lastName = p.getLastNameProperty().getValue();
                     String firstName = p.getFirstNameProperty().getValue();
+                    System.out.println(lastName.toUpperCase()+"_"+firstName.toUpperCase());
                     return (lastName.toUpperCase()+"_"+firstName.toUpperCase()).contains(textField.getText().trim().toUpperCase());
                 });
             }
@@ -146,7 +145,7 @@ public class ClientsController implements Initializable {
         textField.setText("");
     }
 
-    private void initTable() {
+    private void createTable() {
         table.widthProperty().addListener((observable, oldValue, newValue) -> {
             TableHeaderRow header = (TableHeaderRow) table.lookup("TableHeaderRow");
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
@@ -156,29 +155,6 @@ public class ClientsController implements Initializable {
         column2.setCellValueFactory(cellData -> cellData.getValue().getLastNameProperty());
         column3.setCellValueFactory(cellData -> cellData.getValue().getFirstNameProperty());
         column4.setCellValueFactory(cellData -> cellData.getValue().getPhoneNumberProperty());
-        column5.setCellValueFactory(cellData -> cellData.getValue().getEmailProperty());
-        table.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.initOwner(pane.getScene().getWindow());
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("client_data_dialogue2.fxml"));
-                try
-                {
-                    dialog.getDialogPane().setContent(fxmlLoader.load());
-                }catch (IOException e)
-                {
-                    e.printStackTrace();
-                    return;
-                }
-                dialog.setTitle("Informaţii client");
-                dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-                ClientDataDialogueController2 controller = fxmlLoader.getController();
-                ClientData client = table.getSelectionModel().getSelectedItem();
-                controller.updateInfo(client);
-                dialog.showAndWait();
-            }
-        });
     }
 
     private void initButtons()

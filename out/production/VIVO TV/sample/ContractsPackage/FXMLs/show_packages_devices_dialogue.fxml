@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="500.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ContractsPackage.ShowPackagesAndDevicesDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+          <Label layoutX="30.0" layoutY="20.0" text="Pachete curente">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Label layoutX="36.0" layoutY="140.0" text="Nr. act:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="15.0" layoutY="105.0" text="Dată start:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label fx:id="startDate" layoutX="95.0" layoutY="101.0" prefHeight="30.0" prefWidth="150.0">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label fx:id="paperNumber" layoutX="95.0" layoutY="135.0" prefHeight="30.0" prefWidth="150.0">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+         <Label layoutX="58.0" layoutY="70.0" text="Tip:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="packageName" layoutX="95.0" layoutY="65.0" prefHeight="30.0" prefWidth="150.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label fx:id="typeLabel" layoutX="300.0" layoutY="70.0">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="dateLabel" layoutX="256.0" layoutY="105.0">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="paperLabel" layoutX="277.0" layoutY="140.0">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="typeField" layoutX="337.0" layoutY="65.0" prefHeight="30.0" prefWidth="150.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label fx:id="dateField" layoutX="337.0" layoutY="101.0" prefHeight="30.0" prefWidth="150.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label fx:id="paperField" layoutX="337.0" layoutY="135.0" prefHeight="30.0" prefWidth="150.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label layoutX="30.0" layoutY="180.0" text="Dispozitive închiriate">
+            <font>
+               <Font name="System Bold" size="18.0" />
+            </font>
+         </Label>
+         <TableView fx:id="devicesTable" layoutX="30.0" layoutY="231.0" prefHeight="200.0" prefWidth="500.0">
+           <columns>
+             <TableColumn fx:id="idColumn" prefWidth="90.0" text="ID" />
+             <TableColumn fx:id="seriesColumn" prefWidth="138.0" text="Serie" />
+               <TableColumn fx:id="rentDateColumn" prefWidth="110.0" text="Dată închiriere" />
+               <TableColumn fx:id="typeColumn" prefWidth="160.0" text="Tip" />
+           </columns>
+         </TableView>
+      </Pane>
+   </content>
+</DialogPane>

@@ -31,13 +31,13 @@ public class Controller implements Initializable {
     @FXML
     private void switchToClientsScene()
     {
-        switchTheScene("clients_menu.fxml");
+        switchTheScene("ClientsPackage/FXMLs/clients_menu.fxml");
     }
 
     @FXML
     private void switchToSubScene()
     {
-        switchTheScene("sub_menu.fxml");
+        switchTheScene("ContractsPackage/FXMLs/contracts_menu.fxml");
     }
 
     @FXML

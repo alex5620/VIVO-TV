@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ContractsPackage.InsertContractDataDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+          <Label layoutX="30.0" layoutY="20.0" text="Inserare date contract">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Label layoutX="36.0" layoutY="100.0" text="Adresă:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="16.0" layoutY="170.0" text="Data start:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="30.0" layoutY="240.0" text="Nr. luni:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="90.0" layoutY="365.0" text="*Câmpurile sunt opţionale.">
+              <font>
+                  <Font size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="address" layoutX="100.0" layoutY="93.0" prefHeight="38.0" prefWidth="350.0">
+              <style>
+                  -fx-faint-focus-color: transparent;
+                  -fx-focus-color:rgba(0,0,0,0.2);
+              </style>
+          </TextField>
+         <Label layoutX="255.0" layoutY="170.0" text="Data terminare(*):">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label layoutX="300.0" layoutY="240.0" text="Tip factură:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label layoutX="25.0" layoutY="310.0" text="Id client:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <TextField fx:id="clientId" layoutX="100.0" layoutY="303.0" prefHeight="38.0" prefWidth="120.0" style="&#10;              " />
+         <DatePicker fx:id="startDate" layoutX="100.0" layoutY="168.0" prefWidth="120.0" />
+         <DatePicker fx:id="endDate" layoutX="390.0" layoutY="168.0" prefWidth="120.0" />
+         <ChoiceBox fx:id="billType" layoutX="390.0" layoutY="238.0" prefWidth="100.0" />
+         <ChoiceBox fx:id="months" layoutX="100.0" layoutY="238.0" prefWidth="60.0" />
+      </Pane>
+   </content>
+</DialogPane>

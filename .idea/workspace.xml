@@ -2,19 +2,50 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/sample/ClientDataDialogueController2.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/Clients.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/SubController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/client_data_dialogue.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/client_data_dialogue2.fxml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/sub_menu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ChangePackageDialogueController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/Contracts.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractsController2.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/Device.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/change_package_dialogue.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/contracts_menu2.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/insert_contract_data_dialogue.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/insert_device_data_dialogue.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/remove_device_dialogue.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/show_packages_devices_dialogue.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/InsertContractDataDialogueController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/InsertDeviceDataDialogueController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/RemoveDeviceDialogueController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ShowPackagesAndDevicesDialogueController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/TVPackage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/FXMLFileLoader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/ClientsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientData.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientDataDialogueController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientDataDialogueController2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/Clients.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/Controller.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/Styles.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/Styles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/SubController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/client_data_dialogue.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/client_data_dialogue2.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/clients_menu.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/main_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/main_menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/sub_menu.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ClientData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ClientDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/InsertClientDataDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ClientDataDialogueController2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ShowClientDataDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Clients.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/Clients.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ClientsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/clients_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/clients_menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/Styles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Styles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/SubController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/client_data_dialogue.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/FXMLs/insert_client_data_dialogue.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/client_data_dialogue2.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/FXMLs/show_client_data_dialogue.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/clients_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/FXMLs/clients_menu.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/main_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/main_menu.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/sub_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs/contracts_menu.fxml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -100,7 +131,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/sample" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/sample/ContractsPackage/FXMLs" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -113,7 +144,19 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ContractsPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ClientsPackage\FXMLs" />
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="sample.ContractsPackage" />
+      <recent name="sample.ClientsPackage" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ContractsPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ClientsPackage\FXMLs" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -153,7 +196,7 @@
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="sample.*" />
+          <option name="PATTERN" value="sample.ContractsPackage.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -236,7 +279,15 @@
       <workItem from="1605557536169" duration="4559000" />
       <workItem from="1605770670687" duration="32237000" />
       <workItem from="1605814121961" duration="690000" />
-      <workItem from="1605816459846" duration="823000" />
+      <workItem from="1605816459846" duration="5910000" />
+      <workItem from="1605868013077" duration="2814000" />
+      <workItem from="1605878679940" duration="9139000" />
+      <workItem from="1605936532558" duration="4046000" />
+      <workItem from="1606312584409" duration="97000" />
+      <workItem from="1606317763793" duration="9520000" />
+      <workItem from="1606332084977" duration="8815000" />
+      <workItem from="1606394057734" duration="15953000" />
+      <workItem from="1606421046263" duration="5485000" />
     </task>
     <servers />
   </component>

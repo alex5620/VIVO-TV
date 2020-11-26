@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="330.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ContractsPackage.ShowContractDataDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+          <Label layoutX="30.0" layoutY="20.0" text="Informaţii contract">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Label layoutX="21.0" layoutY="185.0" text="Dată start:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="33.0" layoutY="150.0" text="Id client:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="40.0" layoutY="115.0" text="Adresă:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="27.0" layoutY="220.0" text="Dată end:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label fx:id="address" layoutX="105.0" layoutY="106.0" prefHeight="38.0" prefWidth="450.0">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label fx:id="clientId" layoutX="105.0" layoutY="141.0" prefHeight="38.0" prefWidth="450.0">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+          <Label fx:id="startDate" layoutX="105.0" layoutY="176.0" prefHeight="38.0" prefWidth="450.0">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>          </Label>
+         <Label layoutX="6.0" layoutY="80.0" text="Nr. contract:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="contractNumber" layoutX="105.0" layoutY="71.0" prefHeight="38.0" prefWidth="450.0" style="&#10;              ">
+             <font>
+                 <Font name="System Bold" size="16.0" />
+             </font>
+         </Label>
+          <Label fx:id="email" layoutX="105.0" layoutY="211.0" prefHeight="38.0" prefWidth="450.0">
+              <font>
+                  <Font name="System Bold" size="16.0" />
+              </font>
+          </Label>
+         <Label layoutX="37.0" layoutY="255.0" text="Nr. luni:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label layoutX="15.0" layoutY="290.0" text="Tip factură:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label fx:id="endDate" layoutX="105.0" layoutY="211.0" prefHeight="38.0" prefWidth="450.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label fx:id="months" layoutX="105.0" layoutY="246.0" prefHeight="38.0" prefWidth="450.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+         <Label fx:id="billType" layoutX="105.0" layoutY="281.0" prefHeight="38.0" prefWidth="450.0">
+            <font>
+               <Font name="System Bold" size="16.0" />
+            </font>
+         </Label>
+      </Pane>
+   </content>
+</DialogPane>

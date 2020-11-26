@@ -42,7 +42,7 @@
             <Image url="@../resources/tv.png" />
          </image>
       </ImageView>
-      <Button fx:id="subButton" focusTraversable="false" layoutX="375.0" layoutY="295.0" mnemonicParsing="false" onAction="#switchToSubScene" prefHeight="50.0" prefWidth="150.0" text="Abonamente">
+      <Button fx:id="subButton" focusTraversable="false" layoutX="375.0" layoutY="295.0" mnemonicParsing="false" onAction="#switchToSubScene" prefHeight="50.0" prefWidth="150.0" text="Contracte">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ContractsPackage.InsertDeviceDataDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+          <Label layoutX="30.0" layoutY="35.0" text="Inserare date dispozitiv">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Label layoutX="18.0" layoutY="250.0" text="Dată închiriere:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="94.0" layoutY="100.0" text="Tip:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="120.0" layoutY="365.0" text="*Câmpurile sunt opţionale.">
+              <font>
+                  <Font size="14.0" />
+              </font>
+          </Label>
+         <Label layoutX="65.0" layoutY="175.0" text="Serie(*):">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <TextField fx:id="series" layoutX="130.0" layoutY="169.0" prefHeight="38.0" prefWidth="120.0" style="&#10;              " />
+         <DatePicker fx:id="rentDate" layoutX="130.0" layoutY="250.0" prefWidth="120.0" />
+         <ChoiceBox fx:id="deviceType" layoutX="130.0" layoutY="100.0" prefWidth="120.0" />
+      </Pane>
+   </content>
+</DialogPane>

@@ -1,6 +1,7 @@
-package sample.ClientsPackage;
+package sample.ChannelsPackage;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,10 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import sample.Controller;
 import sample.Styles;
@@ -25,17 +23,17 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class ClientsController implements Initializable {
+public class ChannelsController implements Initializable {
     @FXML private Pane pane;
     @FXML private Button backButton, addButton, removeButton, modifyButton;
-    @FXML private Label infoIcon;
-    @FXML private RadioButton idRButton, nameRButton, phoneRButton;
     @FXML private TextField textField;
     @FXML private Pagination pagination;
-    @FXML private TableView<ClientData> table;
-    @FXML private TableColumn<ClientData, Integer> column1;
-    @FXML private TableColumn<ClientData, String> column2, column3, column4, column5;
-    private FilteredList<ClientData> filteredList;
+    @FXML private TableView<ChannelData> table;
+    @FXML private TableColumn<ChannelData, Integer> idColumn, channelColumn;
+    @FXML private TableColumn<ChannelData, String> nameColumn, startDateColumn, endDateColumn, typeColumn;
+    @FXML private TableColumn<ChannelData, Double> frequencyColumn;
+    private FilteredList<ChannelData> filteredList;
+
 
     @FXML
     private void switchToMainMenuScene()
@@ -52,12 +50,12 @@ public class ClientsController implements Initializable {
     }
 
     @FXML
-    private void addNewClient()
+    private void addNewChannel()
     {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(pane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("FXMLs/insert_client_data_dialogue.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("FXMLs/insert_channel_data_dialogue.fxml"));
         try
         {
             dialog.getDialogPane().setContent(fxmlLoader.load());
@@ -66,15 +64,14 @@ public class ClientsController implements Initializable {
             e.printStackTrace();
             return;
         }
-        textField.setText("");
-        dialog.setTitle("Adăugare client nou");
+        dialog.setTitle("Adăugare program nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            InsertClientDataDialogueController controller = fxmlLoader.getController();
+            InsertChannelDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-            if(Clients.getClients().getSize()%rowsPerPage()==1)
+            if(Channels.getChannels().getSize()%rowsPerPage()==1)
             {
                 pagination.setPageCount(pagination.getPageCount()+1);
             }
@@ -83,12 +80,12 @@ public class ClientsController implements Initializable {
     }
 
     @FXML
-    private void modifyClient()
+    private void modifyChannel()
     {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(pane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("FXMLs/insert_client_data_dialogue.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("FXMLs/insert_channel_data_dialogue.fxml"));
         try
         {
             dialog.getDialogPane().setContent(fxmlLoader.load());
@@ -97,20 +94,21 @@ public class ClientsController implements Initializable {
             e.printStackTrace();
             return;
         }
-        dialog.setTitle("Actualizare date client");
+        dialog.setTitle("Actualizare date program");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        InsertClientDataDialogueController controller = fxmlLoader.getController();
-        ClientData client = table.getSelectionModel().getSelectedItem();
-        if(client==null)
+        InsertChannelDataDialogueController controller = fxmlLoader.getController();
+        ChannelData channelData = table.getSelectionModel().getSelectedItem();
+        if(channelData==null)
         {
             createAlertDialogue();
             return;
         }
-        controller.updateTextFields(client);
+        controller.updateTextFields(channelData);
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateClient(client);
+            controller.updateChannel(channelData);
+            table.refresh();
         }
     }
 
@@ -118,12 +116,8 @@ public class ClientsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initButtons();
-        initInfoIcon();
-        initToggleGroup();
         initPagination();
         addListenerToTextField();
-        textField.setText(" ");
-        textField.setText("");
     }
 
     private void initTable() {
@@ -132,33 +126,13 @@ public class ClientsController implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
         });
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        column1.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdProperty().getValue()).asObject());
-        column2.setCellValueFactory(cellData -> cellData.getValue().getLastNameProperty());
-        column3.setCellValueFactory(cellData -> cellData.getValue().getFirstNameProperty());
-        column4.setCellValueFactory(cellData -> cellData.getValue().getPhoneNumberProperty());
-        column5.setCellValueFactory(cellData -> cellData.getValue().getEmailProperty());
-        table.setOnMousePressed(event -> {
-            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.initOwner(pane.getScene().getWindow());
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("FXMLs/show_client_data_dialogue.fxml"));
-                try
-                {
-                    dialog.getDialogPane().setContent(fxmlLoader.load());
-                }catch (IOException e)
-                {
-                    e.printStackTrace();
-                    return;
-                }
-                dialog.setTitle("Informaţii client");
-                dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-                ShowClientDataDialogueController controller = fxmlLoader.getController();
-                ClientData client = table.getSelectionModel().getSelectedItem();
-                controller.updateInfo(client);
-                dialog.showAndWait();
-            }
-        });
+        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdProperty().getValue()).asObject());
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        startDateColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
+        endDateColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
+        typeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
+        frequencyColumn.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getFrequencyProperty().getValue()).asObject());
+        channelColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getChannelProperty().getValue()).asObject());
     }
 
     private void initButtons()
@@ -171,11 +145,11 @@ public class ClientsController implements Initializable {
         removeButton.setOnMouseExited(e -> removeButton.setStyle(Styles.IDLE_BUTTON_STYLE));
         removeButton.setOnAction(event ->
         {
-            ClientData client = table.getSelectionModel().getSelectedItem();
-            if(client!=null)
+            ChannelData channelData = table.getSelectionModel().getSelectedItem();
+            if(channelData!=null)
             {
-                Clients.getClients().removeClient(client);
-                if(Clients.getClients().getSize()%rowsPerPage()==0)
+                Channels.getChannels().removeChannel(channelData);
+                if(Channels.getChannels().getSize()%rowsPerPage()==0)
                 {
                     pagination.setPageCount(pagination.getPageCount()-1);
                     pagination.setCurrentPageIndex(pagination.getPageCount()-1);
@@ -190,29 +164,6 @@ public class ClientsController implements Initializable {
         modifyButton.setOnMouseExited(e -> modifyButton.setStyle(Styles.IDLE_BUTTON_STYLE));
     }
 
-    private void initInfoIcon()
-    {
-        Image img = new Image("resources/info.png");
-        ImageView view = new ImageView(img);
-        infoIcon.setGraphic(view);
-        Tooltip tooltip = new Tooltip("Căutarea se poate face după:\n" +
-                "- id sau\n" +
-                "- nume_prenume sau\n" +
-                "- telefon.\n");
-        tooltip.setFont(new Font("System", 14));
-        infoIcon.setTooltip(tooltip);
-    }
-
-    private void initToggleGroup()
-    {
-        ToggleGroup toggleGroup = new ToggleGroup();
-        idRButton.setToggleGroup(toggleGroup);
-        idRButton.setSelected(true);
-        nameRButton.setToggleGroup(toggleGroup);
-        phoneRButton.setToggleGroup(toggleGroup);
-        toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> textField.clear());
-    }
-
     private void initPagination() {
         int pagesNumber = getProperPageNumber();
         pagination.setPageCount(pagesNumber);
@@ -220,28 +171,32 @@ public class ClientsController implements Initializable {
     }
 
     private Node createPage(int pageIndex) {
-        ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
+        ObservableList<ChannelData> allChannels = Channels.getChannels().getAllChannels();
         int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allClients.size());
-        table.setItems(FXCollections.observableList(allClients.subList(fromIndex, toIndex)));
+        int toIndex = Math.min(fromIndex + rowsPerPage(), allChannels.size());
+        table.setItems(FXCollections.observableList(allChannels.subList(fromIndex, toIndex)));
         return new Pane(table);
+    }
+
+    private int rowsPerPage()
+    {
+        return 18;
+    }
+
+    private int getProperPageNumber() {
+        int size = Channels.getChannels().getSize();
+        int pagesNumber = size / rowsPerPage() + 1;
+        if (size % rowsPerPage() == 0) {
+            --pagesNumber;
+        }
+        return pagesNumber;
     }
 
     private void addListenerToTextField() {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Clients.getClients().getAllClients());
-            if (idRButton.isSelected()) {
-                filteredList.setPredicate(p -> Integer.toString(p.getIdProperty().getValue()).contains(textField.getText().trim()));
-            } else if (phoneRButton.isSelected()) {
-                filteredList.setPredicate(p -> p.getPhoneNumberProperty().getValue().contains(textField.getText().trim()));
-            } else if (nameRButton.isSelected()) {
-                filteredList.setPredicate(p ->
-                {
-                    String lastName = p.getLastNameProperty().getValue();
-                    String firstName = p.getFirstNameProperty().getValue();
-                    return (lastName.toUpperCase() + "_" + firstName.toUpperCase()).contains(textField.getText().trim().toUpperCase());
-                });
-            }
+            filteredList = new FilteredList(Channels.getChannels().getAllChannels());
+            filteredList.setPredicate(p -> p.getNameProperty().getValue().toUpperCase().
+                    contains(textField.getText().trim().toUpperCase()));
             doPagination();
         });
     }
@@ -259,27 +214,12 @@ public class ClientsController implements Initializable {
         return new Pane(table);
     }
 
-    private int rowsPerPage()
-    {
-        return 17;
-    }
-
-    private int getProperPageNumber() {
-        int size = Clients.getClients().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
-            --pagesNumber;
-        }
-        return pagesNumber;
-    }
-
     private void createAlertDialogue()
     {
-        Alert alert = new Alert(Alert.AlertType.ERROR, "\n        Niciun client nu a fost selectat.", ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.ERROR, "\n        Niciun program nu a fost selectat.", ButtonType.OK);
         alert.setHeaderText("");
         alert.setTitle("Error");
         alert.getDialogPane().setMaxWidth(350);
         alert.show();
     }
 }
-

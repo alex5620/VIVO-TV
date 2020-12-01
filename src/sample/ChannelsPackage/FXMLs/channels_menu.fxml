@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ChannelsPackage.ChannelsController">
+   <style>
+      -fx-background-color:  rgba(0,161,244,0.2);
+      -fx-border-color: rgba(0,0,0,0.15);
+   </style>
+   <children>
+      <Button fx:id="backButton" focusTraversable="false" layoutX="736.0" layoutY="576.0" mnemonicParsing="false" onAction="#switchToMainMenuScene" prefHeight="50.0" prefWidth="150.0" text="Înapoi">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Button>
+      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="600.0">
+         <columns>
+            <TableColumn fx:id="idColumn" editable="false" prefWidth="55.0" resizable="false" text="ID" />
+            <TableColumn fx:id="nameColumn" editable="false" prefWidth="155.0" resizable="false" text="Denumire" />
+            <TableColumn fx:id="startDateColumn" editable="false" prefWidth="95.0" resizable="false" text="Dată start" />
+            <TableColumn fx:id="endDateColumn" editable="false" prefWidth="95.0" resizable="false" text="Dată end" />
+            <TableColumn fx:id="typeColumn" editable="false" prefWidth="55.0" resizable="false" text="Tip" />
+            <TableColumn fx:id="frequencyColumn" prefWidth="88.0" text="Frecvenţa" />
+            <TableColumn fx:id="channelColumn" prefWidth="55.0" text="Canal" />
+         </columns>
+      </TableView>
+      <Pagination fx:id="pagination" layoutX="32.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
+      <Label layoutX="92.0" layoutY="50.0" text="Listă programe">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Label>
+      <Button fx:id="addButton" focusTraversable="false" layoutX="688.0" layoutY="437.0" mnemonicParsing="false" onAction="#addNewChannel" prefHeight="50.0" prefWidth="170.0" text="Adaugă program">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="removeButton" focusTraversable="false" layoutX="698.0" layoutY="356.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Şterge">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <Button fx:id="modifyButton" focusTraversable="false" layoutX="698.0" layoutY="274.0" mnemonicParsing="false" onAction="#modifyChannel" prefHeight="50.0" prefWidth="150.0" text="Modifică">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
+      <TextField fx:id="textField" layoutX="698.0" layoutY="167.0" prefHeight="38.0" prefWidth="150.0" promptText="Caută(denumire)">
+         <style>
+            -fx-faint-focus-color: transparent;
+            -fx-focus-color:rgba(0,0,0,0.2);
+         </style>
+      </TextField>
+      <Label fx:id="infoIcon" layoutX="657.0" layoutY="171.0" />
+   </children>
+</Pane>

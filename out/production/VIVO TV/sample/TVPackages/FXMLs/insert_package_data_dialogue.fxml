@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TVPackages.InsertPackageDataDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+          <Label layoutX="30.0" layoutY="20.0" text="Inserare date pachet">
+              <font>
+                  <Font name="System Bold" size="18.0" />
+              </font>
+          </Label>
+          <Label layoutX="17.0" layoutY="100.0" text="Denumire:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="16.0" layoutY="200.0" text="Data start:">
+              <font>
+                  <Font name="System Bold" size="14.0" />
+              </font>
+          </Label>
+          <Label layoutX="90.0" layoutY="365.0" text="*Câmpurile sunt opţionale.">
+              <font>
+                  <Font size="14.0" />
+              </font>
+          </Label>
+          <TextField fx:id="name" layoutX="100.0" layoutY="93.0" prefHeight="38.0" prefWidth="150.0">
+              <style>
+                  -fx-faint-focus-color: transparent;
+                  -fx-focus-color:rgba(0,0,0,0.2);
+              </style>
+          </TextField>
+         <Label layoutX="280.0" layoutY="200.0" text="Data terminare(*):">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <Label layoutX="370.0" layoutY="100.0" text="Preţ:">
+            <font>
+               <Font name="System Bold" size="14.0" />
+            </font>
+         </Label>
+         <TextField fx:id="price" layoutX="415.0" layoutY="93.0" prefHeight="38.0" prefWidth="120.0" style="&#10;              " />
+         <DatePicker fx:id="startDate" layoutX="100.0" layoutY="198.0" prefWidth="120.0" />
+         <DatePicker fx:id="endDate" layoutX="415.0" layoutY="198.0" prefWidth="120.0" />
+      </Pane>
+   </content>
+</DialogPane>

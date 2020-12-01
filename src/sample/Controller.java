@@ -19,7 +19,7 @@ public class Controller implements Initializable {
     @FXML private Button clientsButton;
     @FXML private Button subButton;
     @FXML private Button packButton;
-    @FXML private Button aboutButton;
+    @FXML private Button channelsButton;
     @FXML private Button exitButton;
 
     @FXML
@@ -39,6 +39,12 @@ public class Controller implements Initializable {
     {
         switchTheScene("ContractsPackage/FXMLs/contracts_menu.fxml");
     }
+
+    @FXML
+    private void switchToChannelsScene() { switchTheScene("ChannelsPackage/FXMLs/channels_menu.fxml"); }
+
+    @FXML
+    private void switchToPackagesScene() { switchTheScene("TVPackages/FXMLs/packages_menu.fxml"); }
 
     @FXML
     private void switchTheScene(String fmxlName)
@@ -62,8 +68,8 @@ public class Controller implements Initializable {
         subButton.setOnMouseExited(e -> subButton.setStyle(Styles.IDLE_BUTTON_STYLE));
         packButton.setOnMouseEntered(e -> packButton.setStyle(Styles.HOVERED_BUTTON_STYLE));
         packButton.setOnMouseExited(e -> packButton.setStyle(Styles.IDLE_BUTTON_STYLE));
-        aboutButton.setOnMouseEntered(e -> aboutButton.setStyle(Styles.HOVERED_BUTTON_STYLE));
-        aboutButton.setOnMouseExited(e -> aboutButton.setStyle(Styles.IDLE_BUTTON_STYLE));
+        channelsButton.setOnMouseEntered(e -> channelsButton.setStyle(Styles.HOVERED_BUTTON_STYLE));
+        channelsButton.setOnMouseExited(e -> channelsButton.setStyle(Styles.IDLE_BUTTON_STYLE));
         exitButton.setOnMouseEntered(e -> exitButton.setStyle(Styles.HOVERED_BUTTON_STYLE));
         exitButton.setOnMouseExited(e -> exitButton.setStyle(Styles.IDLE_BUTTON_STYLE));
     }

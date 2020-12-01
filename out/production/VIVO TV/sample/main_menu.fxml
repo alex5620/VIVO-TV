@@ -17,7 +17,7 @@
             <Image url="@../resources/vivotv.png" />
          </image>
       </ImageView>
-      <Button fx:id="packButton" focusTraversable="false" layoutX="375.0" layoutY="363.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Pachete TV">
+      <Button fx:id="packButton" focusTraversable="false" layoutX="375.0" layoutY="363.0" mnemonicParsing="false" onAction="#switchToPackagesScene" prefHeight="50.0" prefWidth="150.0" text="Pachete TV">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>
@@ -27,7 +27,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Button fx:id="aboutButton" focusTraversable="false" layoutX="375.0" layoutY="430.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="Despre">
+      <Button fx:id="channelsButton" focusTraversable="false" layoutX="375.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToChannelsScene" prefHeight="50.0" prefWidth="150.0" text="Programe TV">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

@@ -3,9 +3,7 @@ package sample.ChannelsPackage;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import sample.ClientsPackage.ClientData;
+import sample.ClientsPackage.InsertClientDataDialogueController;
 import sample.Controller;
 import sample.Styles;
 
@@ -32,8 +32,6 @@ public class ChannelsController implements Initializable {
     @FXML private TableColumn<ChannelData, Integer> idColumn, channelColumn;
     @FXML private TableColumn<ChannelData, String> nameColumn, startDateColumn, endDateColumn, typeColumn;
     @FXML private TableColumn<ChannelData, Double> frequencyColumn;
-    private FilteredList<ChannelData> filteredList;
-
 
     @FXML
     private void switchToMainMenuScene()
@@ -64,6 +62,7 @@ public class ChannelsController implements Initializable {
             e.printStackTrace();
             return;
         }
+        textField.setText("");
         dialog.setTitle("Adăugare program nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
@@ -71,11 +70,9 @@ public class ChannelsController implements Initializable {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             InsertChannelDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-            if(Channels.getChannels().getSize()%rowsPerPage()==1)
-            {
-                pagination.setPageCount(pagination.getPageCount()+1);
-            }
-            pagination.setCurrentPageIndex(getProperPageNumber() - 1);
+//            textField.setText(" " + textField.getText());
+//            textField.setText(textField.getText().substring(1));
+//            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
         }
     }
 
@@ -98,17 +95,16 @@ public class ChannelsController implements Initializable {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         InsertChannelDataDialogueController controller = fxmlLoader.getController();
-        ChannelData channelData = table.getSelectionModel().getSelectedItem();
-        if(channelData==null)
+        ChannelData channel = table.getSelectionModel().getSelectedItem();
+        if(channel==null)
         {
             createAlertDialogue();
             return;
         }
-        controller.updateTextFields(channelData);
+        controller.updateTextFields(channel);
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateChannel(channelData);
-            table.refresh();
+            controller.updateChannel(channel);
         }
     }
 
@@ -116,8 +112,9 @@ public class ChannelsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initButtons();
-        initPagination();
         addListenerToTextField();
+        textField.setText(" ");
+        textField.setText("");
     }
 
     private void initTable() {
@@ -145,14 +142,20 @@ public class ChannelsController implements Initializable {
         removeButton.setOnMouseExited(e -> removeButton.setStyle(Styles.IDLE_BUTTON_STYLE));
         removeButton.setOnAction(event ->
         {
-            ChannelData channelData = table.getSelectionModel().getSelectedItem();
-            if(channelData!=null)
-            {
-                Channels.getChannels().removeChannel(channelData);
-                if(Channels.getChannels().getSize()%rowsPerPage()==0)
+            ChannelData channel = table.getSelectionModel().getSelectedItem();
+            if(channel!=null) {
+                ChannelsDatabaseHandler.getInstance().removeChannel(channel.getIdProperty().getValue());
+                int currentPage = pagination.getCurrentPageIndex();
+                int pageCount = pagination.getPageCount();
+                int channelsOnPage = Channels.getChannels().getSize();
+                textField.setText(" " + textField.getText());
+                textField.setText(textField.getText().substring(1));
+                if (pageCount - 1 == currentPage && channelsOnPage == 1) {
+                    pagination.setCurrentPageIndex(currentPage-1);
+                }
+                else
                 {
-                    pagination.setPageCount(pagination.getPageCount()-1);
-                    pagination.setCurrentPageIndex(pagination.getPageCount()-1);
+                    pagination.setCurrentPageIndex(currentPage);
                 }
             }
             else
@@ -164,29 +167,14 @@ public class ChannelsController implements Initializable {
         modifyButton.setOnMouseExited(e -> modifyButton.setStyle(Styles.IDLE_BUTTON_STYLE));
     }
 
-    private void initPagination() {
-        int pagesNumber = getProperPageNumber();
-        pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage);
-    }
-
-    private Node createPage(int pageIndex) {
-        ObservableList<ChannelData> allChannels = Channels.getChannels().getAllChannels();
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allChannels.size());
-        table.setItems(FXCollections.observableList(allChannels.subList(fromIndex, toIndex)));
-        return new Pane(table);
-    }
-
     private int rowsPerPage()
     {
         return 18;
     }
 
-    private int getProperPageNumber() {
-        int size = Channels.getChannels().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
+    private int getProperPageNumber(int rowsNum) {
+        int pagesNumber = rowsNum / rowsPerPage() + 1;
+        if (rowsNum % rowsPerPage() == 0) {
             --pagesNumber;
         }
         return pagesNumber;
@@ -194,23 +182,21 @@ public class ChannelsController implements Initializable {
 
     private void addListenerToTextField() {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Channels.getChannels().getAllChannels());
-            filteredList.setPredicate(p -> p.getNameProperty().getValue().toUpperCase().
-                    contains(textField.getText().trim().toUpperCase()));
             doPagination();
         });
     }
 
-    private void doPagination() {
-        int pagesNumber = filteredList.size() % rowsPerPage() == 0 ? filteredList.size()/rowsPerPage() : filteredList.size()/rowsPerPage() + 1;
+    private void doPagination()
+    {
+        int pagesNumber = getProperPageNumber(ChannelsDatabaseHandler.getInstance().getChannelsNumber(textField.getText().trim().toUpperCase()));
         pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage2);
+        pagination.setPageFactory(this::createPage);
     }
 
-    private Node createPage2(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), filteredList.size());
-        table.setItems(FXCollections.observableList(filteredList.subList(fromIndex, toIndex)));
+    private Node createPage(int pageIndex) {
+        Channels.getChannels().addData(pageIndex, rowsPerPage(), textField.getText().trim().toUpperCase());
+        ObservableList<ChannelData> allChannels = Channels.getChannels().getAllChannels();
+        table.setItems(allChannels);
         return new Pane(table);
     }
 

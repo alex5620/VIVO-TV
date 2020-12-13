@@ -2,9 +2,7 @@ package sample.ClientsPackage;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -35,7 +33,6 @@ public class ClientsController implements Initializable {
     @FXML private TableView<ClientData> table;
     @FXML private TableColumn<ClientData, Integer> column1;
     @FXML private TableColumn<ClientData, String> column2, column3, column4, column5;
-    private FilteredList<ClientData> filteredList;
 
     @FXML
     private void switchToMainMenuScene()
@@ -74,11 +71,9 @@ public class ClientsController implements Initializable {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             InsertClientDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-            if(Clients.getClients().getSize()%rowsPerPage()==1)
-            {
-                pagination.setPageCount(pagination.getPageCount()+1);
-            }
-            pagination.setCurrentPageIndex(getProperPageNumber() - 1);
+            textField.setText(" " + textField.getText());
+            textField.setText(textField.getText().substring(1));
+            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
         }
     }
 
@@ -120,7 +115,6 @@ public class ClientsController implements Initializable {
         initButtons();
         initInfoIcon();
         initToggleGroup();
-        initPagination();
         addListenerToTextField();
         textField.setText(" ");
         textField.setText("");
@@ -172,13 +166,19 @@ public class ClientsController implements Initializable {
         removeButton.setOnAction(event ->
         {
             ClientData client = table.getSelectionModel().getSelectedItem();
-            if(client!=null)
-            {
-                Clients.getClients().removeClient(client);
-                if(Clients.getClients().getSize()%rowsPerPage()==0)
+            if(client!=null) {
+                ClientsDatabaseHandler.getInstance().removeClient(client.getIdProperty().getValue());
+                int currentPage = pagination.getCurrentPageIndex();
+                int pageCount = pagination.getPageCount();
+                int clientsOnPage = Clients.getClients().getSize();
+                textField.setText(" " + textField.getText());
+                textField.setText(textField.getText().substring(1));
+                if (pageCount - 1 == currentPage && clientsOnPage == 1) {
+                    pagination.setCurrentPageIndex(currentPage-1);
+                }
+                else
                 {
-                    pagination.setPageCount(pagination.getPageCount()-1);
-                    pagination.setCurrentPageIndex(pagination.getPageCount()-1);
+                    pagination.setCurrentPageIndex(currentPage);
                 }
             }
             else
@@ -213,49 +213,69 @@ public class ClientsController implements Initializable {
         toggleGroup.selectedToggleProperty().addListener((observable, oldVal, newVal) -> textField.clear());
     }
 
-    private void initPagination() {
-        int pagesNumber = getProperPageNumber();
-        pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage);
-    }
-
-    private Node createPage(int pageIndex) {
-        ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allClients.size());
-        table.setItems(FXCollections.observableList(allClients.subList(fromIndex, toIndex)));
-        return new Pane(table);
-    }
-
     private void addListenerToTextField() {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Clients.getClients().getAllClients());
             if (idRButton.isSelected()) {
-                filteredList.setPredicate(p -> Integer.toString(p.getIdProperty().getValue()).contains(textField.getText().trim()));
-            } else if (phoneRButton.isSelected()) {
-                filteredList.setPredicate(p -> p.getPhoneNumberProperty().getValue().contains(textField.getText().trim()));
-            } else if (nameRButton.isSelected()) {
-                filteredList.setPredicate(p ->
-                {
-                    String lastName = p.getLastNameProperty().getValue();
-                    String firstName = p.getFirstNameProperty().getValue();
-                    return (lastName.toUpperCase() + "_" + firstName.toUpperCase()).contains(textField.getText().trim().toUpperCase());
-                });
+                doPaginationWhenIdSelected();
             }
-            doPagination();
+            else if (phoneRButton.isSelected()) {
+                doPaginationWhenPhoneSelected();
+            }
+            else {
+                doPaginationWhenNameSelected();
+            }
         });
     }
 
-    private void doPagination() {
-        int pagesNumber = filteredList.size() % rowsPerPage() == 0 ? filteredList.size()/rowsPerPage() : filteredList.size()/rowsPerPage() + 1;
+    private void doPaginationWhenIdSelected()
+    {
+        int pagesNumber = getProperPageNumber(ClientsDatabaseHandler.getInstance().getClientsNumberById(textField.getText().trim()));
         pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage2);
+        pagination.setPageFactory(this::createPageWhenIdSelected);
     }
 
-    private Node createPage2(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), filteredList.size());
-        table.setItems(FXCollections.observableList(filteredList.subList(fromIndex, toIndex)));
+    private Node createPageWhenIdSelected(int pageIndex) {
+        Clients.getClients().addDataWhenIdSelected(pageIndex, rowsPerPage(), textField.getText().trim());
+        ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
+        table.setItems(allClients);
+        return new Pane(table);
+    }
+
+    private void doPaginationWhenPhoneSelected()
+    {
+        int pagesNumber = getProperPageNumber(ClientsDatabaseHandler.getInstance().getClientsNumberByPhone(getPhoneNumber()));
+        pagination.setPageCount(pagesNumber);
+        pagination.setPageFactory(this::createPageWhenPhoneSelected);
+    }
+
+    private String getPhoneNumber()
+    {
+        String phone = textField.getText();
+        if(phone.length() >= 1)
+        {
+            phone = phone.substring(1);
+        }
+        return phone;
+    }
+
+    private Node createPageWhenPhoneSelected(int pageIndex) {
+        Clients.getClients().addDataWhenPhoneSelected(pageIndex, rowsPerPage(), getPhoneNumber());
+        ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
+        table.setItems(allClients);
+        return new Pane(table);
+    }
+
+    private void doPaginationWhenNameSelected()
+    {
+        int pagesNumber = getProperPageNumber(ClientsDatabaseHandler.getInstance().getClientsNumberByName(textField.getText().trim().toUpperCase()));
+        pagination.setPageCount(pagesNumber);
+        pagination.setPageFactory(this::createPageWhenNameSelected);
+    }
+
+    private Node createPageWhenNameSelected(int pageIndex) {
+        Clients.getClients().addDataWhenNameSelected(pageIndex, rowsPerPage(), textField.getText().trim().toUpperCase());
+        ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
+        table.setItems(allClients);
         return new Pane(table);
     }
 
@@ -264,10 +284,9 @@ public class ClientsController implements Initializable {
         return 17;
     }
 
-    private int getProperPageNumber() {
-        int size = Clients.getClients().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
+    private int getProperPageNumber(int rowsNum) {
+        int pagesNumber = rowsNum / rowsPerPage() + 1;
+        if (rowsNum % rowsPerPage() == 0) {
             --pagesNumber;
         }
         return pagesNumber;

@@ -41,11 +41,12 @@ public class InsertChannelDataDialogueController implements Initializable{
         }
         newChannel.setFrequency(Double.parseDouble(frequency.getText()));
         newChannel.setChannel(Integer.parseInt(channel.getText()));
-        Channels.getChannels().addChannel(newChannel);
+        ChannelsDatabaseHandler.getInstance().addChannel(newChannel);
     }
 
     void updateTextFields(ChannelData channelData)
     {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         name.setText(channelData.getNameProperty().getValue());
         type.setValue(channelData.getTypeProperty().getValue());
         String stringStartDate = channelData.getStartDateProperty().getValue();
@@ -74,5 +75,6 @@ public class InsertChannelDataDialogueController implements Initializable{
         }
         channelData.setFrequency(Double.parseDouble(frequency.getText()));
         channelData.setChannel(Integer.parseInt(channel.getText()));
+        ChannelsDatabaseHandler.getInstance().updateChannel(channelData);
     }
 }

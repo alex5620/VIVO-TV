@@ -6,6 +6,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 
 public class Main extends Application {
     @Override
@@ -13,7 +17,6 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("main_menu.fxml"));
         primaryStage.setTitle("VIVO TV");
         primaryStage.setScene(new Scene(root, 900, 640));
-
         primaryStage.show();
     }
 

@@ -4,12 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="640.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ClientsPackage.ClientsController">
    <style>
       -fx-background-color:  rgba(0,161,244,0.2);
@@ -20,16 +20,16 @@
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Button>
-      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="600.0">
+      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="605.0">
          <columns>
             <TableColumn fx:id="column1" editable="false" prefWidth="85.0" resizable="false" text="Id client" />
             <TableColumn fx:id="column2" editable="false" prefWidth="110.0" resizable="false" text="Nume" />
             <TableColumn fx:id="column3" editable="false" prefWidth="150.0" resizable="false" text="Prenume" />
             <TableColumn fx:id="column4" editable="false" prefWidth="100.0" resizable="false" text="Telefon" />
-            <TableColumn fx:id="column5" editable="false" prefWidth="210.0" resizable="false" text="E-mail" />
+            <TableColumn fx:id="column5" editable="false" prefWidth="154.0" resizable="false" text="E-mail" />
          </columns>
       </TableView>
-      <Pagination fx:id="pagination" layoutX="32.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0"/>
+      <Pagination fx:id="pagination" layoutX="32.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
       <Label layoutX="92.0" layoutY="50.0" text="Listă clienţi">
          <font>
             <Font name="System Bold" size="28.0" />

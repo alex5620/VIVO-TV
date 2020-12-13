@@ -11,13 +11,11 @@ public class InsertClientDataDialogueController {
 
     void processResult() {
         ClientData newClient = new ClientData();
-        newClient.setId(Clients.getClients().getAllClients().get(Clients.getClients().getAllClients().size()-1).
-                getIdProperty().getValue() + 1);
         newClient.setPhoneNumber(phoneNumber.getText());
-        newClient.setLastName(lastName.getText());
-        newClient.setFirstName(firstName.getText());
+        newClient.setLastName(lastName.getText().toUpperCase());
+        newClient.setFirstName(firstName.getText().toUpperCase());
         newClient.setEmail(email.getText());
-        Clients.getClients().addClient(newClient);
+        ClientsDatabaseHandler.getInstance().addClient(newClient);
     }
 
     void updateTextFields(ClientData client)
@@ -30,9 +28,10 @@ public class InsertClientDataDialogueController {
 
     void updateClient(ClientData client)
     {
-        client.setFirstName(firstName.getText());
-        client.setLastName(lastName.getText());
+        client.setFirstName(firstName.getText().toUpperCase());
+        client.setLastName(lastName.getText().toUpperCase());
         client.setPhoneNumber(phoneNumber.getText());
         client.setEmail(email.getText());
+        ClientsDatabaseHandler.getInstance().updateClient(client);
     }
 }

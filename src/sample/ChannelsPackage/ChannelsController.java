@@ -13,8 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sample.ClientsPackage.ClientData;
-import sample.ClientsPackage.InsertClientDataDialogueController;
 import sample.Controller;
 import sample.Styles;
 
@@ -70,9 +68,9 @@ public class ChannelsController implements Initializable {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             InsertChannelDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-//            textField.setText(" " + textField.getText());
-//            textField.setText(textField.getText().substring(1));
-//            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
+            textField.setText(" " + textField.getText());
+            textField.setText(textField.getText().substring(1));
+            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
         }
     }
 
@@ -105,6 +103,7 @@ public class ChannelsController implements Initializable {
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
             controller.updateChannel(channel);
+            table.refresh();
         }
     }
 
@@ -181,9 +180,7 @@ public class ChannelsController implements Initializable {
     }
 
     private void addListenerToTextField() {
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            doPagination();
-        });
+        textField.textProperty().addListener((observable, oldValue, newValue) -> doPagination());
     }
 
     private void doPagination()

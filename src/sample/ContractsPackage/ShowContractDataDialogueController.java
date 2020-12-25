@@ -2,7 +2,6 @@ package sample.ContractsPackage;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
-import sample.ClientsPackage.ClientData;
 
 public class ShowContractDataDialogueController {
     @FXML private Label contractNumber;
@@ -18,8 +17,8 @@ public class ShowContractDataDialogueController {
         contractNumber.setText(Integer.toString(contractData.getContractNumberProperty().getValue()));
         address.setText(contractData.getAddressProperty().getValue());
         clientId.setText(Integer.toString(contractData.getClientIdProperty().get()));
-        startDate.setText(contractData.getStartDataProperty().get());
-        endDate.setText(contractData.getEndDataProperty().get());
+        startDate.setText(contractData.getStartDateProperty().get());
+        endDate.setText(contractData.getEndDateProperty().get());
         months.setText(Integer.toString(contractData.getMonthsProperty().get()));
         billType.setText(contractData.getBillTypeProperty().getValue());
     }

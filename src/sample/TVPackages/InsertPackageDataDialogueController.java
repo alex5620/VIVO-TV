@@ -5,6 +5,8 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import sample.ChannelsPackage.ChannelData;
 import sample.ChannelsPackage.Channels;
+import sample.ChannelsPackage.ChannelsDatabaseHandler;
+import sample.DateFormatter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -12,23 +14,22 @@ import java.time.format.DateTimeFormatter;
 public class InsertPackageDataDialogueController{
     @FXML private TextField name, price;
     @FXML private DatePicker startDate, endDate;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
 
     void processResult() {
         TVPackageData newPackage = new TVPackageData();
         newPackage.setID(Packages.getPackages().getAllPackages().get(Packages.getPackages().getAllPackages().size()-1).
                 getIdProperty().getValue() + 1);
-        newPackage.setName(name.getText());
+        newPackage.setName(name.getText().toUpperCase());
         newPackage.setPrice(Double.parseDouble(price.getText()));
         if(startDate.getValue()!=null) {
-            String formattedString = startDate.getValue().format(formatter);
+            String formattedString = startDate.getValue().format(DateFormatter.formatter);
             newPackage.setStartDate(formattedString);
         }
         if(endDate.getValue()!=null) {
-            String formattedString = endDate.getValue().format(formatter);
+            String formattedString = endDate.getValue().format(DateFormatter.formatter);
             newPackage.setEndDate(formattedString);
         }
-        Packages.getPackages().addPackage(newPackage);
+        PackagesDatabaseHandler.getInstance().addPackage(newPackage);
     }
 
     void updateTextFields(TVPackageData packageData)
@@ -36,26 +37,35 @@ public class InsertPackageDataDialogueController{
         name.setText(packageData.getNameProperty().getValue());
         String stringStartDate = packageData.getStartDateProperty().getValue();
         if (stringStartDate != null) {
-            startDate.setValue(LocalDate.parse(stringStartDate, formatter));
+            startDate.setValue(LocalDate.parse(stringStartDate, DateFormatter.formatter));
         }
         String stringEndDate = packageData.getEndDateProperty().getValue();
         if (stringEndDate != null) {
-            endDate.setValue(LocalDate.parse(stringEndDate, formatter));
+            endDate.setValue(LocalDate.parse(stringEndDate, DateFormatter.formatter));
         }
         price.setText(Double.toString(packageData.getPriceProperty().get()));
     }
 
-    void updateChannel(TVPackageData packageData)
+    void updatePackage(TVPackageData packageData)
     {
-        packageData.setName(name.getText());
+        packageData.setName(name.getText().toUpperCase());
         if(startDate.getValue()!=null) {
-            String formattedString = startDate.getValue().format(formatter);
+            String formattedString = startDate.getValue().format(DateFormatter.formatter);
             packageData.setStartDate(formattedString);
         }
+        else
+        {
+            packageData.setStartDate(null);
+        }
         if(endDate.getValue()!=null) {
-            String formattedString = endDate.getValue().format(formatter);
+            String formattedString = endDate.getValue().format(DateFormatter.formatter);
             packageData.setEndDate(formattedString);
         }
+        else
+        {
+            packageData.setEndDate(null);
+        }
         packageData.setPrice(Double.parseDouble(price.getText()));
+        PackagesDatabaseHandler.getInstance().updatePackage(packageData);
     }
 }

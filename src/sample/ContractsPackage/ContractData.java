@@ -11,8 +11,8 @@ public class ContractData {
     private IntegerProperty contractNumber;
     private StringProperty address;
     private IntegerProperty clientId;
-    private StringProperty startData;
-    private StringProperty endData;
+    private StringProperty startDate;
+    private StringProperty endDate;
     private IntegerProperty months;
     private StringProperty billType;
     private ArrayList<Device> devices;
@@ -24,8 +24,8 @@ public class ContractData {
         contractNumber = new SimpleIntegerProperty();
         address = new SimpleStringProperty();
         clientId = new SimpleIntegerProperty();
-        startData = new SimpleStringProperty();
-        endData = new SimpleStringProperty();
+        startDate = new SimpleStringProperty();
+        endDate = new SimpleStringProperty();
         months = new SimpleIntegerProperty();
         billType = new SimpleStringProperty();
         devices = new ArrayList<>();
@@ -39,8 +39,8 @@ public class ContractData {
                 "contractNumber=" + contractNumber +
                 ", address=" + address +
                 ", clientId=" + clientId +
-                ", startData=" + startData +
-                ", endData=" + endData +
+                ", startData=" + startDate +
+                ", endData=" + endDate +
                 ", months=" + months +
                 ", billType=" + billType +
                 '}';
@@ -70,20 +70,20 @@ public class ContractData {
         this.clientId.setValue(clientId);
     }
 
-    public StringProperty getStartDataProperty() {
-        return startData;
+    public StringProperty getStartDateProperty() {
+        return startDate;
     }
 
-    public void setStartData(String startData) {
-        this.startData.setValue(startData);
+    public void setStartDate(String startData) {
+        this.startDate.setValue(startData);
     }
 
-    public StringProperty getEndDataProperty() {
-        return endData;
+    public StringProperty getEndDateProperty() {
+        return endDate;
     }
 
-    public void setEndData(String endData) {
-        this.endData.setValue(endData);
+    public void setEndDate(String endDate) {
+        this.endDate.setValue(endDate);
     }
 
     public IntegerProperty getMonthsProperty() {

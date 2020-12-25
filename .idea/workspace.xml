@@ -2,28 +2,44 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/ojdbc8.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelsDatabaseHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsDatabaseHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/sample/DateFormatter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractsDatabaseHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/sample/TVPackages/PackagesDatabaseHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/VIVO TV.iml" beforeDir="false" afterPath="$PROJECT_DIR$/VIVO TV.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelData.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/Channels.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/Channels.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelsDatabaseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/ChannelsDatabaseHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/InsertChannelDataDialogueController$1.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/InsertChannelDataDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ChannelsPackage/InsertChannelDataDialogueController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/Clients.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/Clients.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/ClientsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/ClientsController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/FXMLs/clients_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/FXMLs/clients_menu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/InsertClientDataDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/InsertClientDataDialogueController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/ClientsDatabaseHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ClientsPackage/ClientsDatabaseHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ContractData.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ContractData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/Contracts.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/Contracts.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ContractsController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ContractsController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/InsertContractDataDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/InsertContractDataDialogueController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ShowContractDataDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/ContractsPackage/ShowContractDataDialogueController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/DateFormatter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/DateFormatter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/AddChannelsDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/AddChannelsDialogueController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/InsertPackageDataDialogueController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/InsertPackageDataDialogueController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/Packages.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/Packages.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/PackagesController.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/PackagesController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/RemoveChannelsDialogueController$TableCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/VIVO TV/sample/TVPackages/RemoveChannelsDialogueController$TableCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelData.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/ChannelsPackage/Channels.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/Channels.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelsDatabaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/ChannelsDatabaseHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/sample/ChannelsPackage/InsertChannelDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ChannelsPackage/InsertChannelDataDialogueController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/ClientsPackage/Clients.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/Clients.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/ClientsPackage/FXMLs/clients_menu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/FXMLs/clients_menu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/ClientsPackage/InsertClientDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/InsertClientDataDialogueController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsDatabaseHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ClientsPackage/ClientsDatabaseHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ContractsPackage/Contracts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/Contracts.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractsController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ContractsController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ContractsPackage/InsertContractDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/InsertContractDataDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/ContractsPackage/ShowContractDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/ContractsPackage/ShowContractDataDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/DateFormatter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/DateFormatter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/TVPackages/AddChannelsDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/TVPackages/AddChannelsDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/TVPackages/InsertPackageDataDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/TVPackages/InsertPackageDataDialogueController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/TVPackages/Packages.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/TVPackages/Packages.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/TVPackages/PackagesController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/TVPackages/PackagesController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/sample/TVPackages/RemoveChannelsDialogueController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/sample/TVPackages/RemoveChannelsDialogueController.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,12 +140,12 @@
     <property name="settings.editor.selected.configurable" value="preferences.JavaFX" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\TVPackages\FXMLs" />
-      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\TVPackages" />
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ChannelsPackage\FXMLs" />
-      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ChannelsPackage" />
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ContractsPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="sample.TVPackages" />
@@ -137,12 +153,12 @@
       <recent name="sample.ContractsPackage" />
       <recent name="sample.ClientsPackage" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\TVPackages\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\TVPackages" />
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ChannelsPackage\FXMLs" />
+      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ChannelsPackage" />
       <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\ContractsPackage\FXMLs" />
-      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage\FXMLs" />
-      <recent name="E:\Facultate\AN III\SEMI\BD\VIVO TV\src\sample\SubPackage" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -288,7 +304,9 @@
       <workItem from="1607678961925" duration="92000" />
       <workItem from="1607785457063" duration="2940000" />
       <workItem from="1607801466460" duration="8525000" />
-      <workItem from="1607850987300" duration="1597000" />
+      <workItem from="1607850987300" duration="14675000" />
+      <workItem from="1607891321947" duration="5127000" />
+      <workItem from="1608928622806" duration="791000" />
     </task>
     <servers />
   </component>

@@ -3,9 +3,7 @@ package sample.TVPackages;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,10 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import sample.ChannelsPackage.Channels;
-import sample.ContractsPackage.ContractData;
-import sample.ContractsPackage.RemoveDeviceDialogueController;
-import sample.ContractsPackage.ShowPackagesAndDevicesDialogueController;
 import sample.Controller;
 import sample.Styles;
 
@@ -36,8 +30,6 @@ public class PackagesController implements Initializable {
     @FXML private TableColumn<TVPackageData, Integer> idColumn;
     @FXML private TableColumn<TVPackageData, String> nameColumn, startDateColumn, endDateColumn;
     @FXML private TableColumn<TVPackageData, Double> priceColumn;
-    private FilteredList<TVPackageData> filteredList;
-
 
     @FXML
     private void switchToMainMenuScene()
@@ -68,6 +60,7 @@ public class PackagesController implements Initializable {
             e.printStackTrace();
             return;
         }
+        textField.setText("");
         dialog.setTitle("Adăugare pachet nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
@@ -75,11 +68,9 @@ public class PackagesController implements Initializable {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             InsertPackageDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-            if(Channels.getChannels().getSize()%rowsPerPage()==1)
-            {
-                pagination.setPageCount(pagination.getPageCount()+1);
-            }
-            pagination.setCurrentPageIndex(getProperPageNumber() - 1);
+            textField.setText(" " + textField.getText());
+            textField.setText(textField.getText().substring(1));
+            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
         }
     }
 
@@ -111,7 +102,7 @@ public class PackagesController implements Initializable {
         controller.updateTextFields(packageData);
         Optional<ButtonType> result = dialog.showAndWait();
         if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateChannel(packageData);
+            controller.updatePackage(packageData);
             table.refresh();
         }
     }
@@ -181,8 +172,9 @@ public class PackagesController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initButtons();
-        initPagination();
         addListenerToTextField();
+        textField.setText(" ");
+        textField.setText("");
     }
 
     private void initTable() {
@@ -231,13 +223,19 @@ public class PackagesController implements Initializable {
         removeButton.setOnAction(event ->
         {
             TVPackageData packageData = table.getSelectionModel().getSelectedItem();
-            if(packageData!=null)
-            {
-                Packages.getPackages().removePackage(packageData);
-                if(Packages.getPackages().getSize()%rowsPerPage()==0)
+            if(packageData!=null) {
+                PackagesDatabaseHandler.getInstance().removePackage(packageData.getIdProperty().getValue());
+                int currentPage = pagination.getCurrentPageIndex();
+                int pageCount = pagination.getPageCount();
+                int channelsOnPage = Packages.getPackages().getSize();
+                textField.setText(" " + textField.getText());
+                textField.setText(textField.getText().substring(1));
+                if (pageCount - 1 == currentPage && channelsOnPage == 1) {
+                    pagination.setCurrentPageIndex(currentPage-1);
+                }
+                else
                 {
-                    pagination.setPageCount(pagination.getPageCount()-1);
-                    pagination.setCurrentPageIndex(pagination.getPageCount()-1);
+                    pagination.setCurrentPageIndex(currentPage);
                 }
             }
             else
@@ -253,17 +251,16 @@ public class PackagesController implements Initializable {
         removeChannels.setOnMouseExited(e -> removeChannels.setStyle(Styles.IDLE_BUTTON_STYLE));
     }
 
-    private void initPagination() {
-        int pagesNumber = getProperPageNumber();
+    private void doPagination() {
+        int pagesNumber = getProperPageNumber(PackagesDatabaseHandler.getInstance().getPackagesNumber(textField.getText().trim().toUpperCase()));
         pagination.setPageCount(pagesNumber);
         pagination.setPageFactory(this::createPage);
     }
 
     private Node createPage(int pageIndex) {
+        Packages.getPackages().addData(pageIndex, rowsPerPage(), textField.getText().trim().toUpperCase());
         ObservableList<TVPackageData> allPackages = Packages.getPackages().getAllPackages();
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allPackages.size());
-        table.setItems(FXCollections.observableList(allPackages.subList(fromIndex, toIndex)));
+        table.setItems(allPackages);
         return new Pane(table);
     }
 
@@ -272,10 +269,9 @@ public class PackagesController implements Initializable {
         return 18;
     }
 
-    private int getProperPageNumber() {
-        int size = Packages.getPackages().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
+    private int getProperPageNumber(int rowsNum) {
+        int pagesNumber = rowsNum / rowsPerPage() + 1;
+        if (rowsNum % rowsPerPage() == 0) {
             --pagesNumber;
         }
         return pagesNumber;
@@ -283,24 +279,8 @@ public class PackagesController implements Initializable {
 
     private void addListenerToTextField() {
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Packages.getPackages().getAllPackages());
-            filteredList.setPredicate(p -> p.getNameProperty().getValue().toUpperCase().
-                    contains(textField.getText().trim().toUpperCase()));
             doPagination();
         });
-    }
-
-    private void doPagination() {
-        int pagesNumber = filteredList.size() % rowsPerPage() == 0 ? filteredList.size()/rowsPerPage() : filteredList.size()/rowsPerPage() + 1;
-        pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage2);
-    }
-
-    private Node createPage2(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), filteredList.size());
-        table.setItems(FXCollections.observableList(filteredList.subList(fromIndex, toIndex)));
-        return new Pane(table);
     }
 
     private void createAlertDialogue(String message)

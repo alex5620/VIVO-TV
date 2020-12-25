@@ -11,7 +11,7 @@ public class ChannelData {
     private DoubleProperty frequency;
     private IntegerProperty channel;
 
-    ChannelData()
+    public ChannelData()
     {
         id = new SimpleIntegerProperty();
         name = new SimpleStringProperty();

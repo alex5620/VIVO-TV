@@ -2,9 +2,7 @@ package sample.ContractsPackage;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -13,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import sample.ChannelsPackage.InsertChannelDataDialogueController;
 import sample.FXMLFileLoader;
 
 import java.io.IOException;
@@ -29,7 +28,6 @@ public class ContractsController implements Initializable {
     @FXML private TableColumn<ContractData, String> column2, column4, column5, column7;
     @FXML private TableColumn<ContractData, Integer> column1, column3, column6;
     @FXML private ImageView nextButton;
-    private FilteredList<ContractData> filteredList;
 
     @FXML
     private void switchToMainMenuScene()
@@ -60,11 +58,9 @@ public class ContractsController implements Initializable {
         if(result.isPresent() && result.get() == ButtonType.OK) {
             InsertContractDataDialogueController controller = fxmlLoader.getController();
             controller.processResult();
-            if(Contracts.getContracts().getSize()%rowsPerPage()==1)
-            {
-                pagination.setPageCount(pagination.getPageCount()+1);
-            }
-            pagination.setCurrentPageIndex(getProperPageNumber() - 1);
+            textField.setText(" " + textField.getText());
+            textField.setText(textField.getText().substring(1));
+            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
         }
     }
 
@@ -105,12 +101,9 @@ public class ContractsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initButtons();
-        initPagination();
         addListenerToTextField();
-        nextButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            FXMLFileLoader.loadFXML(pane, "ContractsPackage/FXMLs/contracts_menu2.fxml");
-            event.consume();
-        });
+        textField.setText(" ");
+        textField.setText("");
     }
 
     private void initTable() {
@@ -122,8 +115,8 @@ public class ContractsController implements Initializable {
         column1.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getContractNumberProperty().getValue()).asObject());
         column2.setCellValueFactory(cellData -> cellData.getValue().getAddressProperty());
         column3.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getClientIdProperty().getValue()).asObject());
-        column4.setCellValueFactory(cellData -> cellData.getValue().getStartDataProperty());
-        column5.setCellValueFactory(cellData -> cellData.getValue().getEndDataProperty());
+        column4.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
+        column5.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());
         column6.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getMonthsProperty().getValue()).asObject());
         column7.setCellValueFactory(cellData -> cellData.getValue().getBillTypeProperty());
         table.setOnMousePressed(event -> {
@@ -140,7 +133,7 @@ public class ContractsController implements Initializable {
                     e.printStackTrace();
                     return;
                 }
-                dialog.setTitle("Informaţii client");
+                dialog.setTitle("Informaţii contract");
                 dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
                 ShowContractDataDialogueController controller = fxmlLoader.getController();
                 ContractData contractData = table.getSelectionModel().getSelectedItem();
@@ -177,41 +170,27 @@ public class ContractsController implements Initializable {
         });
         modifyButton.setOnMouseEntered(e -> modifyButton.setStyle(sample.Styles.HOVERED_BUTTON_STYLE));
         modifyButton.setOnMouseExited(e -> modifyButton.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
+        nextButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            FXMLFileLoader.loadFXML(pane, "ContractsPackage/FXMLs/contracts_menu2.fxml");
+            event.consume();
+        });
     }
 
-    private void initPagination() {
-        int pagesNumber = getProperPageNumber();
+    private void addListenerToTextField()
+    {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> doPagination());
+    }
+
+    private void doPagination() {
+        int pagesNumber = getProperPageNumber(ContractsDatabaseHandler.getInstance().getContractsNumber(textField.getText().trim()));
         pagination.setPageCount(pagesNumber);
         pagination.setPageFactory(this::createPage);
     }
 
     private Node createPage(int pageIndex) {
+        Contracts.getContracts().addData(pageIndex, rowsPerPage(), textField.getText().trim());
         ObservableList<ContractData> allContracts = Contracts.getContracts().getAllContracts();
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allContracts.size());
-        table.setItems(FXCollections.observableList(allContracts.subList(fromIndex, toIndex)));
-        return new Pane(table);
-    }
-
-    void addListenerToTextField()
-    {
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Contracts.getContracts().getAllContracts());
-                filteredList.setPredicate(p -> Integer.toString(p.getContractNumberProperty().getValue()).contains(textField.getText().trim()));
-            doPagination();
-        });
-    }
-
-    private void doPagination() {
-        int pagesNumber = filteredList.size() % rowsPerPage() == 0 ? filteredList.size()/rowsPerPage() : filteredList.size()/rowsPerPage() + 1;
-        pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage2);
-    }
-
-    private Node createPage2(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), filteredList.size());
-        table.setItems(FXCollections.observableList(filteredList.subList(fromIndex, toIndex)));
+        table.setItems(allContracts);
         return new Pane(table);
     }
 
@@ -220,10 +199,9 @@ public class ContractsController implements Initializable {
         return 16;
     }
 
-    private int getProperPageNumber() {
-        int size = Contracts.getContracts().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
+    private int getProperPageNumber(int rowsNum) {
+        int pagesNumber = rowsNum / rowsPerPage() + 1;
+        if (rowsNum % rowsPerPage() == 0) {
             --pagesNumber;
         }
         return pagesNumber;

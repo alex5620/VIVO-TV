@@ -1,12 +1,9 @@
 package sample.ChannelsPackage;
 
-import sample.ClientsPackage.ClientData;
 import sample.DateFormatter;
 
 import java.sql.*;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ChannelsDatabaseHandler {
     private static ChannelsDatabaseHandler channelsDatabaseHandler = new ChannelsDatabaseHandler();
@@ -57,10 +54,13 @@ public class ChannelsDatabaseHandler {
                 ChannelData channelData = new ChannelData();
                 channelData.setId(res.getInt("id_post"));
                 channelData.setName(res.getString("denumire_post"));
-                channelData.setStartDate(res.getDate("data_start").toString());
+                Date startDate = res.getDate("data_start");
+                if(startDate != null) {
+                    channelData.setStartDate(startDate.toLocalDate().format(DateFormatter.formatter));
+                }
                 Date endDate = res.getDate("data_end");
                 if(endDate != null) {
-                    channelData.setEndDate(endDate.toString());
+                    channelData.setEndDate(endDate.toLocalDate().format(DateFormatter.formatter));
                 }
                 channelData.setType(res.getString("tip"));
                 PreparedStatement pStmt2 = con.prepareStatement("SELECT * FROM detalii_posturi WHERE id_post = ?");
@@ -200,6 +200,46 @@ public class ChannelsDatabaseHandler {
         } finally {
             closeConnection();
         }
+    }
+
+    public ArrayList<ChannelData> getAllChannels() {
+        getConnection();
+        ArrayList<ChannelData> channels = null;
+        try {
+            channels = new ArrayList<>();
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT * FROM posturi");
+            while (res.next()) {
+                ChannelData channelData = new ChannelData();
+                channelData.setId(res.getInt("id_post"));
+                channelData.setName(res.getString("denumire_post"));
+                Date startDate = res.getDate("data_start");
+                if(startDate != null) {
+                    channelData.setStartDate(startDate.toLocalDate().format(DateFormatter.formatter));
+                }
+                Date endDate = res.getDate("data_end");
+                if(endDate != null) {
+                    channelData.setEndDate(endDate.toLocalDate().format(DateFormatter.formatter));
+                }
+                channelData.setType(res.getString("tip"));
+                PreparedStatement pStmt2 = con.prepareStatement("SELECT * FROM detalii_posturi WHERE id_post = ?");
+                pStmt2.setInt(1, res.getInt("id_post"));
+                ResultSet res2 = pStmt2.executeQuery();
+                if(res2.next())
+                {
+                    channelData.setFrequency(res2.getDouble("frecventa"));
+                    channelData.setChannel(res2.getInt("canal"));
+                }
+                channels.add(channelData);
+            }
+            res.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return channels;
     }
 
     private void closeConnection()

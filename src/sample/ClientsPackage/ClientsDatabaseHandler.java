@@ -27,8 +27,9 @@ public class ClientsDatabaseHandler {
             PreparedStatement pStmt = con.prepareStatement("SELECT COUNT(*) FROM clienti WHERE TO_CHAR(id_client) LIKE ?");
             pStmt.setString(1, "%"+id+"%");
             ResultSet res = pStmt.executeQuery();
-            res.next();
-            count = res.getInt(1);
+            if(res.next()) {
+                count = res.getInt(1);
+            }
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();

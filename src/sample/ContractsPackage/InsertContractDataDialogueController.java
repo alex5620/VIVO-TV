@@ -5,17 +5,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import sample.DateFormatter;
 
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 public class InsertContractDataDialogueController implements Initializable {
     @FXML TextField address, clientId;
     @FXML DatePicker startDate, endDate;
     @FXML ChoiceBox months, billType;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -26,6 +25,8 @@ public class InsertContractDataDialogueController implements Initializable {
         months.getItems().add(24);
         months.getItems().add(36);
         months.setValue(24);
+        startDate.setConverter(DateFormatter.stringConverter);
+        endDate.setConverter(DateFormatter.stringConverter);
     }
 
     void processResult() {
@@ -33,19 +34,20 @@ public class InsertContractDataDialogueController implements Initializable {
         newContract.setContractNumber(Contracts.getContracts().getAllContracts().get(Contracts.getContracts().getAllContracts().size()-1).
                 getContractNumberProperty().getValue() + 1);
         newContract.setAddress(address.getText());
-        newContract.setClientId(Integer.parseInt(clientId.getText()));
         if(startDate.getValue()!=null) {
-            String formattedString = startDate.getValue().format(formatter);
-            newContract.setStartData(formattedString);
+            String formattedString = startDate.getValue().format(DateFormatter.formatter);
+            newContract.setStartDate(formattedString);
         }
-        if(endDate.getValue()!=null)
-        {
-            String formattedString = endDate.getValue().format(formatter);
-            newContract.setEndData(formattedString);
+        if(endDate.getValue()!=null) {
+            String formattedString = endDate.getValue().format(DateFormatter.formatter);
+            newContract.setEndDate(formattedString);
         }
-        newContract.setMonths((Integer)months.getValue());
+        newContract.setMonths((int)months.getValue());
+        System.out.println((int)months.getValue());
         newContract.setBillType(((String)billType.getValue()).substring(0,1));
-        Contracts.getContracts().addContract(newContract);
+        System.out.println((String)billType.getValue());
+        newContract.setClientId(Integer.parseInt(clientId.getText()));
+        ContractsDatabaseHandler.getInstance().addContract(newContract);
     }
 
     void updateTextFields(ContractData contract) {
@@ -54,13 +56,13 @@ public class InsertContractDataDialogueController implements Initializable {
         String type = contract.getBillTypeProperty().get();
         billType.setValue(type.equals("F") ? "Fizică" : "Electronică");
         clientId.setText(Integer.toString(contract.getClientIdProperty().get()));
-        String stringStartDate = contract.getStartDataProperty().getValue();
+        String stringStartDate = contract.getStartDateProperty().getValue();
         if (stringStartDate != null) {
-            startDate.setValue(LocalDate.parse(stringStartDate, formatter));
+            startDate.setValue(LocalDate.parse(stringStartDate, DateFormatter.formatter));
         }
-        String stringEndDate = contract.getEndDataProperty().getValue();
+        String stringEndDate = contract.getEndDateProperty().getValue();
         if (stringEndDate != null) {
-            endDate.setValue(LocalDate.parse(stringEndDate, formatter));
+            endDate.setValue(LocalDate.parse(stringEndDate, DateFormatter.formatter));
         }
     }
 
@@ -71,13 +73,20 @@ public class InsertContractDataDialogueController implements Initializable {
         contract.setBillType(((String)billType.getValue()).substring(0,1));
         contract.setClientId(Integer.parseInt(clientId.getText()));
         if(startDate.getValue()!=null) {
-            String formattedString = startDate.getValue().format(formatter);
-            contract.setStartData(formattedString);
+            String formattedString = startDate.getValue().format(DateFormatter.formatter);
+            contract.setStartDate(formattedString);
         }
-        if(endDate.getValue()!=null)
+        else
         {
-            String formattedString = endDate.getValue().format(formatter);
-            contract.setEndData(formattedString);
+            contract.setStartDate(null);
+        }
+        if(endDate.getValue()!=null) {
+            String formattedString = endDate.getValue().format(DateFormatter.formatter);
+            contract.setEndDate(formattedString);
+        }
+        else
+        {
+            contract.setEndDate(null);
         }
     }
 }

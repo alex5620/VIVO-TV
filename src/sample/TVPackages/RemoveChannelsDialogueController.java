@@ -35,6 +35,7 @@ public class RemoveChannelsDialogueController {
             hbox.getChildren().addAll(label, pane, button);
             button.setOnAction(event ->
             {
+                PackagesDatabaseHandler.getInstance().removeChannelFromPackage(tvPackage.getIdProperty().getValue(), getItem().getIdProperty().getValue());
                 tvPackage.removeChannel(getItem());
                 getListView().getItems().remove(getItem());
             });

@@ -11,6 +11,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.ChannelsPackage.ChannelData;
 import sample.ChannelsPackage.Channels;
+import sample.ChannelsPackage.ChannelsDatabaseHandler;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class AddChannelsDialogueController {
         channelsTable.getSelectionModel().setSelectionMode(
                 SelectionMode.MULTIPLE
         );
-        ObservableList<ChannelData> allChannels = Channels.getChannels().getAllChannels();
+        ObservableList<ChannelData> allChannels = FXCollections.observableArrayList(ChannelsDatabaseHandler.getInstance().getAllChannels());
         ArrayList<ChannelData> packageChannels = packageData.getAvailableChannels();
         ObservableList<ChannelData> availableChannels = FXCollections.observableArrayList();
         boolean found;
@@ -58,7 +59,8 @@ public class AddChannelsDialogueController {
 
     void addSelectedChannels(TVPackageData packageData)
     {
-         ObservableList<ChannelData> selectedChannels = channelsTable.getSelectionModel().getSelectedItems();
+        ObservableList<ChannelData> selectedChannels = channelsTable.getSelectionModel().getSelectedItems();
+        PackagesDatabaseHandler.getInstance().addChannelsToPackage(selectedChannels, packageData.getIdProperty().getValue());
         for(ChannelData channel: selectedChannels)
         {
             packageData.addChannel(channel);

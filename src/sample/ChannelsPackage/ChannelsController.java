@@ -4,6 +4,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,7 +19,6 @@ import sample.Styles;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ChannelsController implements Initializable {
@@ -27,7 +27,7 @@ public class ChannelsController implements Initializable {
     @FXML private TextField textField;
     @FXML private Pagination pagination;
     @FXML private TableView<ChannelData> table;
-    @FXML private TableColumn<ChannelData, Integer> idColumn, channelColumn;
+    @FXML private TableColumn<ChannelData, Integer> channelColumn;
     @FXML private TableColumn<ChannelData, String> nameColumn, startDateColumn, endDateColumn, typeColumn;
     @FXML private TableColumn<ChannelData, Double> frequencyColumn;
 
@@ -63,15 +63,28 @@ public class ChannelsController implements Initializable {
         textField.setText("");
         dialog.setTitle("Adăugare program nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    InsertChannelDataDialogueController controller = fxmlLoader.getController();
+                    controller.processResult();
+                    ChannelsDatabaseErrorChecker errorChecker = ChannelsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
+                    }
+                }
+        );
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            InsertChannelDataDialogueController controller = fxmlLoader.getController();
-            controller.processResult();
-            textField.setText(" " + textField.getText());
-            textField.setText(textField.getText().substring(1));
-            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
-        }
+        dialog.showAndWait();
     }
 
     @FXML
@@ -100,11 +113,24 @@ public class ChannelsController implements Initializable {
             return;
         }
         controller.updateTextFields(channel);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateChannel(channel);
-            table.refresh();
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.updateChannel(channel);
+                    ChannelsDatabaseErrorChecker errorChecker = ChannelsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        table.refresh();
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @Override
@@ -122,7 +148,6 @@ public class ChannelsController implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
         });
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdProperty().getValue()).asObject());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         startDateColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());

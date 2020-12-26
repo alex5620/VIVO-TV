@@ -19,9 +19,8 @@
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Button>
-      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="600.0">
+      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="545.0">
          <columns>
-            <TableColumn fx:id="idColumn" editable="false" prefWidth="55.0" resizable="false" text="ID" />
             <TableColumn fx:id="nameColumn" editable="false" prefWidth="155.0" resizable="false" text="Denumire" />
             <TableColumn fx:id="startDateColumn" editable="false" prefWidth="95.0" resizable="false" text="Dată start" />
             <TableColumn fx:id="endDateColumn" editable="false" prefWidth="95.0" resizable="false" text="Dată end" />
@@ -30,7 +29,7 @@
             <TableColumn fx:id="channelColumn" prefWidth="55.0" text="Canal" />
          </columns>
       </TableView>
-      <Pagination fx:id="pagination" layoutX="32.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
+      <Pagination fx:id="pagination" layoutX="62.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
       <Label layoutX="92.0" layoutY="50.0" text="Listă programe">
          <font>
             <Font name="System Bold" size="28.0" />

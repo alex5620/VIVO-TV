@@ -13,8 +13,40 @@ public class ChannelsDatabaseHandler {
         try {
             if(con==null || con.isClosed()) {
                 con = DriverManager.getConnection(
-                        "jdbc:oracle:thin:@localhost:1521:xe", "c##alex", "alex");
+                        "jdbc:oracle:thin:@localhost:1521:xe", "c##test2", "test2");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setAutocommit(boolean val)
+    {
+        try {
+            con.setAutoCommit(val);
+        }catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private void doCommit()
+    {
+        try {
+            Statement stmt = con.createStatement();
+            stmt.executeQuery("COMMIT");
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void doRollback()
+    {
+        try {
+            Statement stmt = con.createStatement();
+            stmt.executeQuery("ROLLBACK");
+            stmt.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -86,6 +118,7 @@ public class ChannelsDatabaseHandler {
     void addChannel(ChannelData channel)
     {
         getConnection();
+        setAutocommit(false);
         try {
             PreparedStatement pStmt = con.prepareStatement( "INSERT INTO posturi VALUES(?,?,?,?,?)");
             int id = ChannelsDatabaseHandler.getInstance().getMaxID()+1;
@@ -116,9 +149,13 @@ public class ChannelsDatabaseHandler {
             pStmt2.setInt(3, channel.getChannelProperty().getValue());
             pStmt2.executeQuery();
             pStmt2.close();
+            doCommit();
         } catch (Exception e) {
             e.printStackTrace();
+            doRollback();
+            ChannelsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
+            setAutocommit(true);
             closeConnection();
         }
     }
@@ -126,6 +163,7 @@ public class ChannelsDatabaseHandler {
     void updateChannel(ChannelData channel)
     {
         getConnection();
+        setAutocommit(false);
         try {
             PreparedStatement pStmt = con.prepareStatement( "UPDATE posturi SET denumire_post = ?," +
                     "data_start = ?," +
@@ -161,9 +199,13 @@ public class ChannelsDatabaseHandler {
             pStmt2.setInt(3, channel.getIdProperty().getValue());
             pStmt2.executeQuery();
             pStmt2.close();
+            doCommit();
         } catch (Exception e) {
             e.printStackTrace();
+            doRollback();
+            ChannelsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
+            setAutocommit(true);
             closeConnection();
         }
     }
@@ -186,15 +228,31 @@ public class ChannelsDatabaseHandler {
 
     void removeChannel(int id)
     {
+       removeFromChannelsDetails(id);
+       removeFromChannels(id);
+    }
+
+    private void removeFromChannelsDetails(int id)
+    {
         getConnection();
         try {
             PreparedStatement pStmt = con.prepareStatement( "DELETE FROM detalii_posturi WHERE id_post = ?");
             pStmt.setInt(1, id);
             pStmt.executeQuery();
-            PreparedStatement pStmt2 = con.prepareStatement( "DELETE FROM posturi WHERE id_post = ?");
-            pStmt2.setInt(1, id);
-            pStmt2.executeQuery();
-            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+    }
+
+    private void removeFromChannels(int id)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM posturi WHERE id_post = ?");
+            pStmt.setInt(1, id);
+            pStmt.executeQuery();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

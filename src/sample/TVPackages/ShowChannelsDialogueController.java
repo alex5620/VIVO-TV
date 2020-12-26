@@ -5,15 +5,17 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.ChannelsPackage.ChannelData;
 
 public class ShowChannelsDialogueController {
-    @FXML TableView<ChannelData> channelsTable;
-    @FXML TableColumn<ChannelData, String> nameColumn, typeColumn;
+    @FXML private TableView<ChannelData> channelsTable;
+    @FXML private TableColumn<ChannelData, String> nameColumn, typeColumn;
     @FXML private TableColumn<ChannelData, Integer> channelColumn;
-    @FXML TableColumn<ChannelData, Double> frequencyColumn;
+    @FXML private TableColumn<ChannelData, Double> frequencyColumn;
+    @FXML private Label textLabel;
 
     void showInfo(TVPackageData packageData)
     {
@@ -26,6 +28,7 @@ public class ShowChannelsDialogueController {
         {
             channelsTable.setPrefWidth(channelsTable.getPrefWidth()+12);
         }
+        textLabel.setText("Pachetul "+packageData.getNameProperty().getValue());
         channelsTable.setItems(channels);
     }
 }

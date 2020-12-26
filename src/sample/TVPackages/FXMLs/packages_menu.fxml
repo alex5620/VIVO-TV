@@ -19,16 +19,15 @@
          <font>
             <Font name="System Bold" size="18.0" />
          </font></Button>
-      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="600.0">
+      <TableView fx:id="table" focusTraversable="false" prefHeight="459.0" prefWidth="515.0">
          <columns>
-            <TableColumn fx:id="idColumn" editable="false" prefWidth="85.0" resizable="false" text="ID" />
             <TableColumn fx:id="nameColumn" editable="false" prefWidth="185.0" resizable="false" text="Denumire" />
             <TableColumn fx:id="startDateColumn" editable="false" prefWidth="121.0" resizable="false" text="Dată start" />
             <TableColumn fx:id="endDateColumn" editable="false" prefWidth="121.0" resizable="false" text="Dată end" />
             <TableColumn fx:id="priceColumn" prefWidth="86.0" text="Preţ" />
          </columns>
       </TableView>
-      <Pagination fx:id="pagination" layoutX="32.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
+      <Pagination fx:id="pagination" layoutX="74.0" layoutY="126.0" prefHeight="500.0" prefWidth="600.0" />
       <Label layoutX="92.0" layoutY="50.0" text="Pachete TV">
          <font>
             <Font name="System Bold" size="28.0" />

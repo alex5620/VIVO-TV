@@ -3,6 +3,7 @@ package sample.ClientsPackage;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,7 +21,6 @@ import sample.Styles;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ClientsController implements Initializable {
@@ -66,15 +66,28 @@ public class ClientsController implements Initializable {
         textField.setText("");
         dialog.setTitle("Adăugare client nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    InsertClientDataDialogueController controller = fxmlLoader.getController();
+                    controller.processResult();
+                    ClientsDatabaseErrorChecker errorChecker = ClientsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
+                    }
+                }
+        );
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            InsertClientDataDialogueController controller = fxmlLoader.getController();
-            controller.processResult();
-            textField.setText(" " + textField.getText());
-            textField.setText(textField.getText().substring(1));
-            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
-        }
+        dialog.showAndWait();
     }
 
     @FXML
@@ -103,10 +116,20 @@ public class ClientsController implements Initializable {
             return;
         }
         controller.updateTextFields(client);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateClient(client);
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.updateClient(client);
+                    ClientsDatabaseErrorChecker errorChecker = ClientsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @Override
@@ -243,23 +266,13 @@ public class ClientsController implements Initializable {
 
     private void doPaginationWhenPhoneSelected()
     {
-        int pagesNumber = getProperPageNumber(ClientsDatabaseHandler.getInstance().getClientsNumberByPhone(getPhoneNumber()));
+        int pagesNumber = getProperPageNumber(ClientsDatabaseHandler.getInstance().getClientsNumberByPhone(textField.getText()));
         pagination.setPageCount(pagesNumber);
         pagination.setPageFactory(this::createPageWhenPhoneSelected);
     }
 
-    private String getPhoneNumber()
-    {
-        String phone = textField.getText();
-        if(phone.length() >= 1)
-        {
-            phone = phone.substring(1);
-        }
-        return phone;
-    }
-
     private Node createPageWhenPhoneSelected(int pageIndex) {
-        Clients.getClients().addDataWhenPhoneSelected(pageIndex, rowsPerPage(), getPhoneNumber());
+        Clients.getClients().addDataWhenPhoneSelected(pageIndex, rowsPerPage(), textField.getText());
         ObservableList<ClientData> allClients = Clients.getClients().getAllClients();
         table.setItems(allClients);
         return new Pane(table);

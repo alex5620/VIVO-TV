@@ -4,6 +4,7 @@ import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -27,7 +28,6 @@ public class PackagesController implements Initializable {
     @FXML private TextField textField;
     @FXML private Pagination pagination;
     @FXML private TableView<TVPackageData> table;
-    @FXML private TableColumn<TVPackageData, Integer> idColumn;
     @FXML private TableColumn<TVPackageData, String> nameColumn, startDateColumn, endDateColumn;
     @FXML private TableColumn<TVPackageData, Double> priceColumn;
 
@@ -63,15 +63,28 @@ public class PackagesController implements Initializable {
         textField.setText("");
         dialog.setTitle("Adăugare pachet nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    InsertPackageDataDialogueController controller = fxmlLoader.getController();
+                    controller.processResult();
+                    PackagesDatabaseErrorChecker errorChecker = PackagesDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
+                    }
+                }
+        );
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            InsertPackageDataDialogueController controller = fxmlLoader.getController();
-            controller.processResult();
-            textField.setText(" " + textField.getText());
-            textField.setText(textField.getText().substring(1));
-            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
-        }
+        dialog.showAndWait();
     }
 
     @FXML
@@ -100,11 +113,24 @@ public class PackagesController implements Initializable {
             return;
         }
         controller.updateTextFields(packageData);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updatePackage(packageData);
-            table.refresh();
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.updatePackage(packageData);
+                    PackagesDatabaseErrorChecker errorChecker = PackagesDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        table.refresh();
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @FXML
@@ -183,7 +209,6 @@ public class PackagesController implements Initializable {
             header.reorderingProperty().addListener((observable1, oldValue1, newValue1) -> header.setReordering(false));
         });
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdProperty().getValue()).asObject());
         nameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         startDateColumn.setCellValueFactory(cellData -> cellData.getValue().getStartDateProperty());
         endDateColumn.setCellValueFactory(cellData -> cellData.getValue().getEndDateProperty());

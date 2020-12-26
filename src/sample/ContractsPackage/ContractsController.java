@@ -3,6 +3,7 @@ package sample.ContractsPackage;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -53,15 +54,27 @@ public class ContractsController implements Initializable {
         textField.setText("");
         dialog.setTitle("Adăugare contract nou");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            InsertContractDataDialogueController controller = fxmlLoader.getController();
-            controller.processResult();
-            textField.setText(" " + textField.getText());
-            textField.setText(textField.getText().substring(1));
-            pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    InsertContractDataDialogueController controller = fxmlLoader.getController();
+                    controller.processResult();
+                    ContractsDatabaseErrorChecker errorChecker = ContractsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(pagination.getPageCount() - 1);
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @FXML
@@ -90,11 +103,24 @@ public class ContractsController implements Initializable {
             return;
         }
         controller.updateTextFields(contract);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.updateContract(contract);
-            table.refresh();
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.updateContract(contract);
+                    ContractsDatabaseErrorChecker errorChecker = ContractsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        table.refresh();
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @Override
@@ -153,14 +179,20 @@ public class ContractsController implements Initializable {
         removeButton.setOnMouseExited(e -> removeButton.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
         removeButton.setOnAction(event ->
         {
-            ContractData contract = table.getSelectionModel().getSelectedItem();
-            if(contract!=null)
-            {
-                Contracts.getContracts().removeContract(contract);
-                if(Contracts.getContracts().getSize()%rowsPerPage()==0)
+            ContractData contact = table.getSelectionModel().getSelectedItem();
+            if(contact!=null) {
+                ContractsDatabaseHandler.getInstance().removeContract(contact.getContractNumberProperty().getValue());
+                int currentPage = pagination.getCurrentPageIndex();
+                int pageCount = pagination.getPageCount();
+                int clientsOnPage = Contracts.getContracts().getSize();
+                textField.setText(" " + textField.getText());
+                textField.setText(textField.getText().substring(1));
+                if (pageCount - 1 == currentPage && clientsOnPage == 1) {
+                    pagination.setCurrentPageIndex(currentPage-1);
+                }
+                else
                 {
-                    pagination.setPageCount(pagination.getPageCount()-1);
-                    pagination.setCurrentPageIndex(pagination.getPageCount()-1);
+                    pagination.setCurrentPageIndex(currentPage);
                 }
             }
             else

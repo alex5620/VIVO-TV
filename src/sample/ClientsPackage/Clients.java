@@ -29,16 +29,6 @@ class Clients {
         return clients;
     }
 
-    public void addClient(ClientData client)
-    {
-        allClients.add(client);
-    }
-
-    public void removeClient(ClientData client)
-    {
-        allClients.remove(client);
-    }
-
     public ObservableList<ClientData> getAllClients()
     {
         return allClients;

@@ -10,6 +10,12 @@ public class InsertClientDataDialogueController {
     @FXML TextField email;
 
     void processResult() {
+        if(firstName.getText().length() == 0 || lastName.getText().length() == 0)
+        {
+            ClientsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ClientsDatabaseErrorChecker.getInstance().setErrorMessage("Campurile nume si prenume trebuie sa fie completate.");
+            return;
+        }
         ClientData newClient = new ClientData();
         newClient.setPhoneNumber(phoneNumber.getText());
         newClient.setLastName(lastName.getText().toUpperCase());
@@ -28,10 +34,22 @@ public class InsertClientDataDialogueController {
 
     void updateClient(ClientData client)
     {
-        client.setFirstName(firstName.getText().toUpperCase());
-        client.setLastName(lastName.getText().toUpperCase());
-        client.setPhoneNumber(phoneNumber.getText());
-        client.setEmail(email.getText());
-        ClientsDatabaseHandler.getInstance().updateClient(client);
+        if(firstName.getText().length() == 0 || lastName.getText().length() == 0)
+        {
+            ClientsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ClientsDatabaseErrorChecker.getInstance().setErrorMessage("Campurile nume si prenume trebuie sa fie completate.");
+            return;
+        }
+        ClientData clientData = new ClientData();
+        clientData.setId(client.getIdProperty().getValue());
+        clientData.setFirstName(firstName.getText().toUpperCase());
+        clientData.setLastName(lastName.getText().toUpperCase());
+        clientData.setPhoneNumber(phoneNumber.getText());
+        clientData.setEmail(email.getText());
+        ClientsDatabaseHandler.getInstance().updateClient(clientData);
+        if(!ClientsDatabaseErrorChecker.getInstance().getErrorFound())
+        {
+            client.updateInfo(clientData);
+        }
     }
 }

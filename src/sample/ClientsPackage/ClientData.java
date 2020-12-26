@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class ClientData {
+public class ClientData{
     private IntegerProperty id;
     private StringProperty firstName;
     private StringProperty lastName;
@@ -30,6 +30,14 @@ public class ClientData {
                 ", phoneNumber=" + phoneNumber +
                 ", email=" + email +
                 '}';
+    }
+
+    void updateInfo(ClientData clientInfo)
+    {
+        setFirstName(clientInfo.getFirstNameProperty().getValue());
+        setLastName(clientInfo.getLastNameProperty().getValue());
+        setPhoneNumber(clientInfo.getPhoneNumberProperty().getValue());
+        setEmail(clientInfo.getEmailProperty().getValue());
     }
 
     public void setId(Integer id) {

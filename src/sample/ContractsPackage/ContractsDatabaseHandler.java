@@ -1,7 +1,5 @@
 package sample.ContractsPackage;
 
-import sample.ChannelsPackage.ChannelData;
-import sample.ChannelsPackage.ChannelsDatabaseHandler;
 import sample.DateFormatter;
 
 import java.sql.*;
@@ -15,7 +13,7 @@ public class ContractsDatabaseHandler {
         try {
             if(con==null || con.isClosed()) {
                 con = DriverManager.getConnection(
-                        "jdbc:oracle:thin:@localhost:1521:xe", "c##alex", "alex");
+                        "jdbc:oracle:thin:@localhost:1521:xe", "c##test2", "test2");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,6 +108,44 @@ public class ContractsDatabaseHandler {
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            ContractsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    void updateContract(ContractData contractData) {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement("UPDATE contracte SET adresa_contract = ?," +
+                    "data_start = ?," +
+                    "data_end = ?," +
+                    "nr_luni = ?," +
+                    "tip_factura = ?, " +
+                    "id_client = ?" +
+                    "WHERE nr_contract = ?");
+            pStmt.setString(1, contractData.getAddressProperty().getValue());
+            String startDate = contractData.getStartDateProperty().getValue();
+            if (startDate != null && startDate.length() != 0) {
+                pStmt.setDate(2, DateFormatter.getDatabaseFormat(startDate));
+            } else {
+                pStmt.setDate(2, null);
+            }
+            String endDate = contractData.getEndDateProperty().getValue();
+            if (endDate != null && endDate.length() != 0) {
+                pStmt.setDate(3, DateFormatter.getDatabaseFormat(endDate));
+            } else {
+                pStmt.setDate(3, null);
+            }
+            pStmt.setInt(4, contractData.getMonthsProperty().getValue());
+            pStmt.setString(5, contractData.getBillTypeProperty().getValue());
+            pStmt.setInt(6, contractData.getClientIdProperty().getValue());
+            pStmt.setInt(7, contractData.getContractNumberProperty().getValue());
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ContractsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
             closeConnection();
         }
@@ -129,6 +165,21 @@ public class ContractsDatabaseHandler {
             e.printStackTrace();
         }
         return maxNum;
+    }
+
+    void removeContract(int contractNumber)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM contracte WHERE nr_contract = ?");
+            pStmt.setInt(1, contractNumber);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
     }
 
     private void closeConnection()

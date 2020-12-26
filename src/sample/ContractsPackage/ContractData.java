@@ -33,6 +33,16 @@ public class ContractData {
         devicesBrief = new SimpleStringProperty("");
     }
 
+    void updateInfo(ContractData contractData)
+    {
+        setAddress(contractData.getAddressProperty().getValue());
+        setClientId(contractData.getClientIdProperty().getValue());
+        setStartDate(contractData.getStartDateProperty().getValue());
+        setEndDate(contractData.getEndDateProperty().getValue());
+        setMonths(contractData.getMonthsProperty().getValue());
+        setBillType(contractData.getBillTypeProperty().getValue());
+    }
+
     @Override
     public String toString() {
         return "ContractData{" +

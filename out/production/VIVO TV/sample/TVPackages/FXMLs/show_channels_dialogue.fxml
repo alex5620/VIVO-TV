@@ -10,7 +10,7 @@
 <DialogPane prefHeight="475.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TVPackages.ShowChannelsDialogueController">
    <content>
       <Pane prefHeight="400.0" prefWidth="600.0">
-         <Label layoutX="195.0" layoutY="25.0" text="Canale disponibile">
+         <Label fx:id="textLabel" layoutX="175.0" layoutY="25.0" text="Canale disponibile">
             <font>
                <Font name="System Bold" size="18.0" />
             </font>

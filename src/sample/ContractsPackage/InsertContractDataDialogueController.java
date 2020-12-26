@@ -3,8 +3,10 @@ package sample.ContractsPackage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import sample.ClientsPackage.ClientsDatabaseHandler;
 import sample.DateFormatter;
 
 import java.net.URL;
@@ -27,6 +29,18 @@ public class InsertContractDataDialogueController implements Initializable {
         months.setValue(24);
         startDate.setConverter(DateFormatter.stringConverter);
         endDate.setConverter(DateFormatter.stringConverter);
+        startDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate day = LocalDate.of(2000,1,1);
+                setDisable(empty || date.compareTo(day) < 0 );
+            }});
+        endDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate day = LocalDate.of(2000,1,1);
+                setDisable(empty || date.compareTo(day) < 0 );
+            }});
     }
 
     void processResult() {
@@ -43,10 +57,25 @@ public class InsertContractDataDialogueController implements Initializable {
             newContract.setEndDate(formattedString);
         }
         newContract.setMonths((int)months.getValue());
-        System.out.println((int)months.getValue());
         newContract.setBillType(((String)billType.getValue()).substring(0,1));
-        System.out.println((String)billType.getValue());
-        newContract.setClientId(Integer.parseInt(clientId.getText()));
+        int clientIdValue;
+        try
+        {
+            clientIdValue = Integer.parseInt(clientId.getText());
+            newContract.setClientId(clientIdValue);
+        }
+        catch (NumberFormatException e)
+        {
+            ContractsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ContractsDatabaseErrorChecker.getInstance().setErrorMessage("Introduceti un id corespunzator.");
+            return;
+        }
+        if(!ClientsDatabaseHandler.getInstance().checkIfClientExists(clientIdValue))
+        {
+            ContractsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ContractsDatabaseErrorChecker.getInstance().setErrorMessage("Introduceti un id de client existent.");
+            return;
+        }
         ContractsDatabaseHandler.getInstance().addContract(newContract);
     }
 
@@ -68,25 +97,49 @@ public class InsertContractDataDialogueController implements Initializable {
 
     void updateContract(ContractData contract)
     {
-        contract.setAddress(address.getText());
-        contract.setMonths((Integer)months.getValue());
-        contract.setBillType(((String)billType.getValue()).substring(0,1));
-        contract.setClientId(Integer.parseInt(clientId.getText()));
+        ContractData newContract = new ContractData();
+        newContract.setContractNumber(contract.getContractNumberProperty().getValue());
+        newContract.setAddress(address.getText());
+        newContract.setMonths((Integer)months.getValue());
+        newContract.setBillType(((String)billType.getValue()).substring(0,1));
+        int clientIdValue;
+        try
+        {
+            clientIdValue = Integer.parseInt(clientId.getText());
+            newContract.setClientId(clientIdValue);
+        }
+        catch (NumberFormatException e)
+        {
+            ContractsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ContractsDatabaseErrorChecker.getInstance().setErrorMessage("Introduceti un id corespunzator.");
+            return;
+        }
+        if(!ClientsDatabaseHandler.getInstance().checkIfClientExists(clientIdValue))
+        {
+            ContractsDatabaseErrorChecker.getInstance().setErrorFound(true);
+            ContractsDatabaseErrorChecker.getInstance().setErrorMessage("Introduceti un id de client existent.");
+            return;
+        }
         if(startDate.getValue()!=null) {
             String formattedString = startDate.getValue().format(DateFormatter.formatter);
-            contract.setStartDate(formattedString);
+            newContract.setStartDate(formattedString);
         }
         else
         {
-            contract.setStartDate(null);
+            newContract.setStartDate(null);
         }
         if(endDate.getValue()!=null) {
             String formattedString = endDate.getValue().format(DateFormatter.formatter);
-            contract.setEndDate(formattedString);
+            newContract.setEndDate(formattedString);
         }
         else
         {
-            contract.setEndDate(null);
+            newContract.setEndDate(null);
+        }
+        ContractsDatabaseHandler.getInstance().updateContract(newContract);
+        if(!ContractsDatabaseErrorChecker.getInstance().getErrorFound())
+        {
+            contract.updateInfo(newContract);
         }
     }
 }

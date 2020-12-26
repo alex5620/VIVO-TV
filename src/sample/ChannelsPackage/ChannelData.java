@@ -22,6 +22,16 @@ public class ChannelData {
         channel = new SimpleIntegerProperty();
     }
 
+    void updateInfo(ChannelData channelData)
+    {
+        setName(channelData.getNameProperty().getValue());
+        setStartDate(channelData.getStartDateProperty().getValue());
+        setEndDate(channelData.getEndDateProperty().getValue());
+        setType(channelData.getTypeProperty().getValue());
+        setFrequency(channelData.getFrequencyProperty().getValue());
+        setChannel(channelData.getChannelProperty().getValue());
+    }
+
     public IntegerProperty getIdProperty() {
         return id;
     }

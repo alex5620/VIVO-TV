@@ -14,6 +14,10 @@ import java.sql.SQLException;
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
+//        Parent root = FXMLLoader.load(getClass().getResource("login_form.fxml"));
+//        primaryStage.setTitle("Login");
+//        primaryStage.setScene(new Scene(root, 400, 200));
+//        primaryStage.show();
         Parent root = FXMLLoader.load(getClass().getResource("main_menu.fxml"));
         primaryStage.setTitle("VIVO TV");
         primaryStage.setScene(new Scene(root, 900, 640));

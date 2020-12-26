@@ -3,6 +3,7 @@ package sample.TVPackages;
 import javafx.collections.ObservableList;
 import sample.ChannelsPackage.ChannelData;
 import sample.ChannelsPackage.ChannelsDatabaseHandler;
+import sample.ClientsPackage.ClientsDatabaseErrorChecker;
 import sample.ContractsPackage.TVPackage;
 import sample.DateFormatter;
 
@@ -17,7 +18,7 @@ public class PackagesDatabaseHandler {
         try {
             if(con==null || con.isClosed()) {
                 con = DriverManager.getConnection(
-                        "jdbc:oracle:thin:@localhost:1521:xe", "c##alex", "alex");
+                        "jdbc:oracle:thin:@localhost:1521:xe", "c##test2", "test2");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -181,6 +182,7 @@ public class PackagesDatabaseHandler {
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            PackagesDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
             closeConnection();
         }
@@ -234,6 +236,7 @@ public class PackagesDatabaseHandler {
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            PackagesDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
             closeConnection();
         }

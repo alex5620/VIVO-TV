@@ -13,7 +13,7 @@ public class ClientsDatabaseHandler {
         try {
             if(con==null || con.isClosed()) {
                 con = DriverManager.getConnection(
-                        "jdbc:oracle:thin:@localhost:1521:xe", "c##alex", "alex");
+                        "jdbc:oracle:thin:@localhost:1521:xe", "c##test2", "test2");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class ClientsDatabaseHandler {
                 String nume = res.getString("nume_client");
                 clientData.setLastName(nume.split("_")[0]);
                 clientData.setFirstName(nume.split("_")[1]);
-                clientData.setPhoneNumber("0" + res.getInt("telefon"));
+                clientData.setPhoneNumber(res.getString("telefon"));
                 clientData.setEmail(res.getString("email"));
                 clients.add(clientData);
             }
@@ -177,13 +177,14 @@ public class ClientsDatabaseHandler {
                                                                 "WHERE id_client = ?");
             pStmt.setString(1, client.getLastNameProperty().getValue().toUpperCase()+"_"+
                     client.getFirstNameProperty().getValue().toUpperCase());
-            pStmt.setInt(2, Integer.parseInt(client.getPhoneNumberProperty().getValue().substring(1)));
+            pStmt.setString(2, client.getPhoneNumberProperty().getValue());
             pStmt.setString(3, client.getEmailProperty().getValue());
             pStmt.setInt(4, client.getIdProperty().getValue());
             pStmt.executeQuery();
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            ClientsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
             closeConnection();
         }
@@ -212,12 +213,13 @@ public class ClientsDatabaseHandler {
             pStmt.setInt(1, ClientsDatabaseHandler.getInstance().getMaxID()+1);
             pStmt.setString(2, client.getLastNameProperty().getValue().toUpperCase()+"_"+
                     client.getFirstNameProperty().getValue().toUpperCase());
-            pStmt.setInt(3, Integer.parseInt(client.getPhoneNumberProperty().getValue().substring(1)));
+            pStmt.setString(3, client.getPhoneNumberProperty().getValue());
             pStmt.setString(4, client.getEmailProperty().getValue());
             pStmt.executeQuery();
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
+            ClientsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
         } finally {
             closeConnection();
         }
@@ -237,6 +239,28 @@ public class ClientsDatabaseHandler {
             e.printStackTrace();
         }
         return maxID;
+    }
+
+    public boolean checkIfClientExists(int id) {
+        getConnection();
+        boolean clientExists = false;
+        try {
+            PreparedStatement pStmt = con.prepareStatement("SELECT COUNT(*) FROM clienti WHERE id_client = ?");
+            pStmt.setInt(1, id);
+            ResultSet res = pStmt.executeQuery();
+            if(res.next()) {
+                if(res.getInt(1) == 1)
+                {
+                    clientExists = true;
+                }
+            }
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return clientExists;
     }
 
     private void closeConnection()

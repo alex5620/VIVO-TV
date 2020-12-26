@@ -23,6 +23,14 @@ public class TVPackageData {
         availableChannels = new ArrayList<>();
     }
 
+    void updateInfo(TVPackageData newPackage)
+    {
+        setName(newPackage.getNameProperty().getValue());
+        setStartDate(newPackage.getStartDateProperty().getValue());
+        setEndDate(newPackage.getEndDateProperty().getValue());
+        setPrice(newPackage.getPriceProperty().getValue());
+    }
+
     public IntegerProperty getIdProperty() {
         return ID;
     }

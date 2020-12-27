@@ -9,7 +9,7 @@ public class ContractsDatabaseHandler {
     private static ContractsDatabaseHandler contractsDatabaseHandler = new ContractsDatabaseHandler();
     private Connection con;
 
-    private void getConnection() {
+    void getConnection() {
         try {
             if(con==null || con.isClosed()) {
                 con = DriverManager.getConnection(
@@ -55,6 +55,73 @@ public class ContractsDatabaseHandler {
             closeConnection();
         }
         return contracts;
+    }
+
+    public ArrayList<ContractPackage> getPackagesByContractNumber(int contractNumber) {
+        ArrayList<ContractPackage> packages = null;
+        boolean firstPackage = true;
+        try {
+            packages = new ArrayList<>();
+            PreparedStatement pStmt = con.prepareStatement("SELECT * FROM contracte_pachete WHERE nr_contract = ? ORDER BY data_start");
+            pStmt.setInt(1, contractNumber);
+            ResultSet res = pStmt.executeQuery();
+            while (res.next()) {
+                ContractPackage contractPackage = new ContractPackage();
+                contractPackage.setTypeId(res.getInt("id_pachet"));
+                Date startDate = res.getDate("data_start");
+                if(startDate != null) {
+                    contractPackage.setStartDate(startDate.toLocalDate().format(DateFormatter.formatter));
+                }
+                if(firstPackage)
+                {
+                    contractPackage.setAdditionalPaperNumber(contractNumber);
+                }
+                else {
+                    contractPackage.setAdditionalPaperNumber(res.getInt("nr_act_aditional"));
+                }
+                packages.add(contractPackage);
+                firstPackage = false;
+            }
+            res.close();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return packages;
+    }
+
+    public ArrayList<Device> getDevicesByContractNumber(int contractNumber) {
+        ArrayList<Device> devices = null;
+        try {
+            devices = new ArrayList<>();
+            PreparedStatement pStmt = con.prepareStatement("SELECT * FROM dispozitive WHERE nr_contract = ?");
+            pStmt.setInt(1, contractNumber);
+            ResultSet res = pStmt.executeQuery();
+            while (res.next()) {
+                Device device = new Device();
+                device.setId(res.getInt("id"));
+                Date rentDate = res.getDate("data_inchiriere");
+                if(rentDate != null) {
+                    device.setDate(rentDate.toLocalDate().format(DateFormatter.formatter));
+                }
+                device.setSeries(res.getString("serie"));
+                PreparedStatement pStmt2 = con.prepareStatement("SELECT denumire FROM tipuri_dispozitive WHERE id_tip = ?");
+                pStmt2.setInt(1, res.getInt("id_tip"));
+                ResultSet res2 = pStmt2.executeQuery();
+                if(res2.next())
+                {
+                    device.setType(res2.getString(1));
+                }
+                pStmt2.close();
+                res2.close();
+                devices.add(device);
+            }
+            res.close();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return devices;
     }
 
     public int getContractsNumber(String id) {
@@ -104,6 +171,34 @@ public class ContractsDatabaseHandler {
             pStmt.setInt(5, contract.getMonthsProperty().getValue());
             pStmt.setString(6, contract.getBillTypeProperty().getValue());
             pStmt.setInt(7, contract.getClientIdProperty().getValue());
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ContractsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    void addDevice(Device device, int contractNumber)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "INSERT INTO dispozitive VALUES(?,?,?,?,?)");
+            int maxDeviceNumber = ContractsDatabaseHandler.getInstance().getMaxDeviceNumber()+1;
+            pStmt.setInt(1, maxDeviceNumber);
+            pStmt.setString(2, device.getSeries().getValue());
+            String rentDate = device.getDate().getValue();
+            if(rentDate!=null && rentDate.length()!=0) {
+                pStmt.setDate(3, DateFormatter.getDatabaseFormat(rentDate));
+            }
+            else
+            {
+                pStmt.setDate(3, null);
+            }
+            pStmt.setInt(4, contractNumber);
+            pStmt.setInt(5, device.getTypeId());
             pStmt.executeQuery();
             pStmt.close();
         } catch (Exception e) {
@@ -167,12 +262,40 @@ public class ContractsDatabaseHandler {
         return maxNum;
     }
 
-    void removeContract(int contractNumber)
+    private void removeContract(int contractNumber)
     {
-        getConnection();
         try {
             PreparedStatement pStmt = con.prepareStatement( "DELETE FROM contracte WHERE nr_contract = ?");
             pStmt.setInt(1, contractNumber);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getMaxDeviceNumber() {
+        int maxNum = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT MAX(id) FROM dispozitive");
+            if (res.next()) {
+                maxNum = res.getInt(1);
+            }
+            res.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maxNum;
+    }
+
+    void removeDevice(int deviceId)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM dispozitive WHERE id = ?");
+            pStmt.setInt(1, deviceId);
             pStmt.executeQuery();
             pStmt.close();
         } catch (Exception e) {
@@ -182,7 +305,99 @@ public class ContractsDatabaseHandler {
         }
     }
 
-    private void closeConnection()
+    private void removeDevicesByContractNumber(int contractNumber)
+    {
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM dispozitive WHERE nr_contract = ?");
+            pStmt.setInt(1, contractNumber);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void addContractPackage(ContractPackage contractPackage, int contractNumber)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "INSERT INTO contracte_pachete VALUES(?,?,?,?)");
+            pStmt.setInt(1, contractNumber);
+            pStmt.setInt(2, contractPackage.getTypeId());
+            String startDate = contractPackage.getStartDate().getValue();
+            if(startDate!=null && startDate.length()!=0) {
+                pStmt.setDate(3, DateFormatter.getDatabaseFormat(startDate));
+            }
+            else
+            {
+                pStmt.setDate(3, null);
+            }
+            int additionPaperNumber = ContractsDatabaseHandler.getInstance().getMaxAdditionalNumber()+1;
+            pStmt.setInt(4, additionPaperNumber);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ContractsDatabaseErrorChecker.getInstance().checkError(e.getMessage());
+        } finally {
+            closeConnection();
+        }
+    }
+
+    public int getMaxAdditionalNumber() {
+        int maxNum = 0;
+        try {
+            Statement stmt = con.createStatement();
+            ResultSet res = stmt.executeQuery("SELECT MAX(nr_act_aditional) FROM contracte_pachete");
+            if (res.next()) {
+                maxNum = res.getInt(1);
+            }
+            res.close();
+            stmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return maxNum;
+    }
+
+    void removePackage(int contractNumber, int idPackage)
+    {
+        getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM contracte_pachete WHERE nr_contract = ? AND id_pachet = ?");
+            pStmt.setInt(1, contractNumber);
+            pStmt.setInt(2, idPackage);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+    }
+
+    void removePackagesByContractNumber(int contractNumber)
+    {
+        try {
+            PreparedStatement pStmt = con.prepareStatement( "DELETE FROM contracte_pachete WHERE nr_contract = ?");
+            pStmt.setInt(1, contractNumber);
+            pStmt.executeQuery();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeAllContractData(int contractNumber)
+    {
+        getConnection();
+        removeDevicesByContractNumber(contractNumber);
+        removePackagesByContractNumber(contractNumber);
+        removeContract(contractNumber);
+        closeConnection();
+    }
+
+    void closeConnection()
     {
         try {
             if(con!=null && !con.isClosed()) {

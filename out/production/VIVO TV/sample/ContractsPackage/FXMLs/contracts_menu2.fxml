@@ -36,17 +36,17 @@
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
-        <Button fx:id="changePackage" focusTraversable="false" layoutX="688.0" layoutY="437.0" mnemonicParsing="false" onAction="#changePackage" prefHeight="50.0" prefWidth="170.0" text="Schimbă pachet">
+        <Button fx:id="addPackage" focusTraversable="false" layoutX="688.0" layoutY="468.0" mnemonicParsing="false" onAction="#addPackage" prefHeight="50.0" prefWidth="170.0" text="Adaugă pachet">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
         </Button>
-        <Button fx:id="addDevice" focusTraversable="false" onAction="#insertDeviceData" layoutX="688.0" layoutY="356.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="170.0" text="Adaugă dispozitiv">
+        <Button fx:id="addDevice" focusTraversable="false" layoutX="688.0" layoutY="326.0" mnemonicParsing="false" onAction="#insertDeviceData" prefHeight="50.0" prefWidth="170.0" text="Adaugă dispozitiv">
             <font>
                 <Font name="System Bold" size="17.0" />
             </font>
         </Button>
-        <Button fx:id="removeDevice" focusTraversable="false" onAction="#removeDevice" layoutX="688.0" layoutY="274.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="170.0" text="Şterge dispozitiv">
+        <Button fx:id="removeDevice" focusTraversable="false" layoutX="688.0" layoutY="254.0" mnemonicParsing="false" onAction="#removeDevice" prefHeight="50.0" prefWidth="170.0" text="Şterge dispozitiv">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
@@ -62,5 +62,10 @@
             <Image url="@../../../resources/next.png" />
          </image>
       </ImageView>
+      <Button fx:id="removePackage" focusTraversable="false" layoutX="688.0" layoutY="397.0" mnemonicParsing="false" onAction="#removePackage" prefHeight="50.0" prefWidth="170.0" text="Şterge pachet">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Button>
     </children>
 </Pane>

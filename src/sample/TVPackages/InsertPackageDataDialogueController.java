@@ -22,6 +22,8 @@ public class InsertPackageDataDialogueController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        startDate.setConverter(DateFormatter.stringConverter);
+        endDate.setConverter(DateFormatter.stringConverter);
         startDate.setDayCellFactory(picker -> new DateCell() {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);

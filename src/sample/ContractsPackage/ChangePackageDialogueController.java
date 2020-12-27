@@ -1,22 +1,41 @@
 package sample.ContractsPackage;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import java.time.format.DateTimeFormatter;
+import sample.DateFormatter;
+import sample.TVPackages.PackagesDatabaseHandler;
 
-public class ChangePackageDialogueController {
+import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
+public class ChangePackageDialogueController implements Initializable {
     @FXML ChoiceBox packetType;
     @FXML DatePicker startDate;
-    @FXML TextField paperNumber;
-    private String [] packagesTypes = {"Standard", "Family", "Sport", "HBO Pack"};
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/d/yyyy");
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        startDate.setConverter(DateFormatter.stringConverter);
+        startDate.setDayCellFactory(picker -> new DateCell() {
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate day = LocalDate.of(2000,1,1);
+                setDisable(empty || date.compareTo(day) < 0 );
+            }});
+    }
 
     void setValidPackages(ContractData contractData)
     {
+        ArrayList<String> packagesTypes = PackagesDatabaseHandler.getInstance().getPackagesNames();
+        boolean cond = contractData.getPackages().size() == 0;
         for (String type : packagesTypes) {
-            if (!contractData.getPackages().get(0).getPackageType().getValue().equals(type)) {
+            if (cond || !contractData.getPackages().get(0).getPackageType().getValue().equals(type)) {
                 packetType.getItems().add(type);
             }
         }
@@ -25,10 +44,12 @@ public class ChangePackageDialogueController {
 
     void processData(ContractData contractData)
     {
-        TVPackage tvPackage = new TVPackage();
-        tvPackage.setPackageType((String)packetType.getValue());
-        tvPackage.setStartDate(startDate.getValue().format(formatter));
-        tvPackage.setAdditionalPaperNumber(Integer.parseInt(paperNumber.getText()));
-        contractData.addPackage(tvPackage);
+        ContractPackage contractPackage = new ContractPackage();
+        contractPackage.setPackageType((String)packetType.getValue());
+        if(startDate.getValue()!=null) {
+            String formattedString = startDate.getValue().format(DateFormatter.formatter);
+            contractPackage.setStartDate(formattedString);
+        }
+        ContractsDatabaseHandler.getInstance().addContractPackage(contractPackage, contractData.getContractNumberProperty().getValue());
     }
 }

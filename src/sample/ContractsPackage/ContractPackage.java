@@ -2,23 +2,31 @@ package sample.ContractsPackage;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import sample.TVPackages.PackagesDatabaseHandler;
 
-public class TVPackage {
+import java.util.ArrayList;
+
+public class ContractPackage {
+    private static ArrayList<String> packagesTypes;
     private StringProperty packageType;
     private StringProperty startDate;
     private int additionalPaperNumber;
 
-    public TVPackage()
+    static {
+        packagesTypes = PackagesDatabaseHandler.getInstance().getPackagesNames();
+    }
+
+    public ContractPackage()
     {
         packageType = new SimpleStringProperty();
         startDate = new SimpleStringProperty();
     }
 
-    public TVPackage(TVPackage tvPackage)
+    public ContractPackage(ContractPackage contractPackage)
     {
-        packageType = new SimpleStringProperty(tvPackage.getPackageType().getValue());
-        startDate = new SimpleStringProperty(tvPackage.getStartDate().getValue());
-        additionalPaperNumber = tvPackage.getAdditionalPaperNumber();
+        packageType = new SimpleStringProperty(contractPackage.getPackageType().getValue());
+        startDate = new SimpleStringProperty(contractPackage.getStartDate().getValue());
+        additionalPaperNumber = contractPackage.getAdditionalPaperNumber();
     }
 
     public void setPackageType(String type)
@@ -28,23 +36,19 @@ public class TVPackage {
 
     public void setTypeId(int id)
     {
-        switch(id)
+        packageType.setValue(packagesTypes.get(id-1));
+    }
+
+    public int getTypeId()
+    {
+        for(int i=0;i<packagesTypes.size();++i)
         {
-            case 0:
-                packageType.setValue("Standard");
-                break;
-            case 1:
-                packageType.setValue("Family");
-                break;
-            case 2:
-                packageType.setValue("Sport");
-                break;
-            case 3:
-                packageType.setValue("HBO Pack");
-                break;
-            default:
-                packageType.setValue("");
+            if(packageType.getValue().equals(packagesTypes.get(i)))
+            {
+                return i+1;
+            }
         }
+        return 0;
     }
 
     public StringProperty getPackageType()

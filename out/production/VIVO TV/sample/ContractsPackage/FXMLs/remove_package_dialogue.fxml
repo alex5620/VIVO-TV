@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane prefHeight="330.0" prefWidth="560.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ContractsPackage.RemovePackageDialogueController">
+   <content>
+      <Pane prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <ListView fx:id="listView" layoutX="65.0" layoutY="100.0" prefHeight="177.0" prefWidth="400.0" />
+            <Label layoutX="50.0" layoutY="20.0" text="Ştergere pachete">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children></Pane>
+   </content>
+</DialogPane>

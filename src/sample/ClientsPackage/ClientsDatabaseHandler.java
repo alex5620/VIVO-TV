@@ -1,5 +1,7 @@
 package sample.ClientsPackage;
 
+import sample.ContractsPackage.ContractsDatabaseHandler;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -190,9 +192,28 @@ public class ClientsDatabaseHandler {
         }
     }
 
-    void removeClient(int id)
+    void removeAllClientData(int id)
     {
         getConnection();
+        try {
+            PreparedStatement pStmt = con.prepareStatement("SELECT nr_contract FROM contracte WHERE id_client = ?");
+            pStmt.setInt(1, id);
+            ResultSet res = pStmt.executeQuery();
+            while (res.next()) {
+                ContractsDatabaseHandler.getInstance().removeAllContractData(res.getInt(1));
+            }
+            res.close();
+            pStmt.close();
+            removeClient(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+    }
+
+    private void removeClient(int id)
+    {
         try {
             PreparedStatement pStmt = con.prepareStatement( "DELETE FROM clienti WHERE id_client = ?");
             pStmt.setInt(1, id);
@@ -200,8 +221,6 @@ public class ClientsDatabaseHandler {
             pStmt.close();
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeConnection();
         }
     }
 

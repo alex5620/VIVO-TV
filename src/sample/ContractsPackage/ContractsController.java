@@ -9,15 +9,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import sample.ChannelsPackage.InsertChannelDataDialogueController;
 import sample.FXMLFileLoader;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class ContractsController implements Initializable {
@@ -179,21 +178,33 @@ public class ContractsController implements Initializable {
         removeButton.setOnMouseExited(e -> removeButton.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
         removeButton.setOnAction(event ->
         {
-            ContractData contact = table.getSelectionModel().getSelectedItem();
-            if(contact!=null) {
-                ContractsDatabaseHandler.getInstance().removeContract(contact.getContractNumberProperty().getValue());
-                int currentPage = pagination.getCurrentPageIndex();
-                int pageCount = pagination.getPageCount();
-                int clientsOnPage = Contracts.getContracts().getSize();
-                textField.setText(" " + textField.getText());
-                textField.setText(textField.getText().substring(1));
-                if (pageCount - 1 == currentPage && clientsOnPage == 1) {
-                    pagination.setCurrentPageIndex(currentPage-1);
-                }
-                else
-                {
-                    pagination.setCurrentPageIndex(currentPage);
-                }
+            ContractData contract = table.getSelectionModel().getSelectedItem();
+            if(contract!=null) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Ştergere date contract.");
+                alert.setHeaderText("");
+                alert.setContentText("În urma ştergerii contractului va dispărea şi istoricul despre " +
+                        "pachetele şi dispozitivele închiriate. Doriţi să continuaţi?");
+                ButtonType yesButton = new ButtonType("Da", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("Nu", ButtonBar.ButtonData.NO);
+                alert.getButtonTypes().setAll(yesButton, noButton);
+                alert.showAndWait().ifPresent(type -> {
+                    if (type == yesButton) {
+                        ContractsDatabaseHandler.getInstance().removeAllContractData(contract.getContractNumberProperty().getValue());
+                        int currentPage = pagination.getCurrentPageIndex();
+                        int pageCount = pagination.getPageCount();
+                        int clientsOnPage = Contracts.getContracts().getSize();
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        if (pageCount - 1 == currentPage && clientsOnPage == 1) {
+                            pagination.setCurrentPageIndex(currentPage-1);
+                        }
+                        else
+                        {
+                            pagination.setCurrentPageIndex(currentPage);
+                        }
+                    }
+                });
             }
             else
             {
@@ -204,6 +215,14 @@ public class ContractsController implements Initializable {
         modifyButton.setOnMouseExited(e -> modifyButton.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
         nextButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             FXMLFileLoader.loadFXML(pane, "ContractsPackage/FXMLs/contracts_menu2.fxml");
+            event.consume();
+        });
+        nextButton.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            nextButton.setImage(new Image("resources/next_coloured.png"));
+            event.consume();
+        });
+        nextButton.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            nextButton.setImage(new Image("resources/next.png"));
             event.consume();
         });
     }

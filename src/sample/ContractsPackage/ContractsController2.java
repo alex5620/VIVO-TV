@@ -2,14 +2,15 @@ package sample.ContractsPackage;
 
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -22,14 +23,13 @@ import java.util.ResourceBundle;
 
 public class ContractsController2 implements Initializable {
     @FXML private Pane pane;
-    @FXML private Button backButton, changePackage, addDevice, removeDevice;
+    @FXML private Button backButton, addPackage, addDevice, removeDevice;
     @FXML private TextField textField;
     @FXML private Pagination pagination;
     @FXML private TableView<ContractData> table;
     @FXML private TableColumn<ContractData, String> column2, column3, column4;
     @FXML private TableColumn<ContractData, Integer> column1;
     @FXML private ImageView nextButton;
-    private FilteredList<ContractData> filteredList;
 
     @FXML
     private void switchToMainMenuScene()
@@ -38,7 +38,7 @@ public class ContractsController2 implements Initializable {
     }
 
     @FXML
-    private void changePackage()
+    private void addPackage()
     {
         ContractData contract = table.getSelectionModel().getSelectedItem();
         if(contract==null)
@@ -48,13 +48,13 @@ public class ContractsController2 implements Initializable {
         }
         else if(contract.getPackagesNumber()==2)
         {
-            createAlertDialogue("Pachetul nu mai poate fi schimbat.");
+            createAlertDialogue("S-a atins numarul maxim de pachete.");
             return;
         }
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.initOwner(pane.getScene().getWindow());
         FXMLLoader fxmlLoader = new FXMLLoader();
-        fxmlLoader.setLocation(getClass().getResource("FXMLs/change_package_dialogue.fxml"));
+        fxmlLoader.setLocation(getClass().getResource("FXMLs/add_package_dialogue.fxml"));
         try
         {
             dialog.getDialogPane().setContent(fxmlLoader.load());
@@ -65,14 +65,31 @@ public class ContractsController2 implements Initializable {
         }
         textField.setText("");
         dialog.setTitle("Adăugare pachet nou");
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         ChangePackageDialogueController controller = fxmlLoader.getController();
         controller.setValidPackages(contract);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.processData(contract);
-        }
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.processData(contract);
+                    ContractsDatabaseErrorChecker errorChecker = ContractsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        int currentPage = pagination.getCurrentPageIndex();
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(currentPage);
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @FXML
@@ -90,6 +107,7 @@ public class ContractsController2 implements Initializable {
             e.printStackTrace();
             return;
         }
+        textField.setText("");
         dialog.setTitle("Inserare date dispozitiv");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
@@ -100,17 +118,33 @@ public class ContractsController2 implements Initializable {
             createAlertDialogue("Niciun contract nu a fost selectat.");
             return;
         }
-        if(contract.getDevicesNumber()==6)
+        if(contract.getDevicesNumber() == 7)
         {
             createAlertDialogue("S-a atins numarul maxim de dispozitive inchiriate.");
             return;
         }
         controller.setValidDevices(contract);
-        Optional<ButtonType> result = dialog.showAndWait();
-        if(result.isPresent() && result.get() == ButtonType.OK) {
-            controller.processResult(contract);
-            table.refresh();
-        }
+        Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.addEventFilter(
+                ActionEvent.ACTION,
+                event -> {
+                    controller.processResult(contract);
+                    ContractsDatabaseErrorChecker errorChecker = ContractsDatabaseErrorChecker.getInstance();
+                    if(errorChecker.getErrorFound()) {
+                        errorChecker.createAlertDialogue();
+                        errorChecker.setErrorFound(false);
+                        event.consume();
+                    }
+                    else
+                    {
+                        int currentPage = pagination.getCurrentPageIndex();
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        pagination.setCurrentPageIndex(currentPage);
+                    }
+                }
+        );
+        dialog.showAndWait();
     }
 
     @FXML
@@ -130,7 +164,6 @@ public class ContractsController2 implements Initializable {
         }
         dialog.setTitle("Ştergere dispozitive");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
-        dialog.getDialogPane().getButtonTypes().add(ButtonType.CANCEL);
         RemoveDeviceDialogueController controller = fxmlLoader.getController();
         ContractData contract = table.getSelectionModel().getSelectedItem();
         if(contract==null)
@@ -138,20 +171,53 @@ public class ContractsController2 implements Initializable {
             createAlertDialogue("Niciun contract nu a fost selectat.");
             return;
         }
+        int currentPage = pagination.getCurrentPageIndex();
         controller.addDevices(contract);
         dialog.showAndWait();
+        textField.setText(" " + textField.getText());
+        textField.setText(textField.getText().substring(1));
+        pagination.setCurrentPageIndex(currentPage);
+    }
+
+    @FXML
+    public void removePackage()
+    {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.initOwner(pane.getScene().getWindow());
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setLocation(getClass().getResource("FXMLs/remove_package_dialogue.fxml"));
+        try
+        {
+            dialog.getDialogPane().setContent(fxmlLoader.load());
+        }catch (IOException e)
+        {
+            e.printStackTrace();
+            return;
+        }
+        dialog.setTitle("Ştergere pachete");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.OK);
+        RemovePackageDialogueController controller = fxmlLoader.getController();
+        ContractData contract = table.getSelectionModel().getSelectedItem();
+        if(contract==null)
+        {
+            createAlertDialogue("Niciun contract nu a fost selectat.");
+            return;
+        }
+        int currentPage = pagination.getCurrentPageIndex();
+        controller.addPackages(contract);
+        dialog.showAndWait();
+        textField.setText(" " + textField.getText());
+        textField.setText(textField.getText().substring(1));
+        pagination.setCurrentPageIndex(currentPage);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initTable();
         initButtons();
-        initPagination();
         addListenerToTextField();
-        nextButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            FXMLFileLoader.loadFXML(pane, "ContractsPackage/FXMLs/contracts_menu.fxml");
-            event.consume();
-        });
+        textField.setText(" ");
+        textField.setText("");
     }
 
     private void initTable() {
@@ -161,8 +227,21 @@ public class ContractsController2 implements Initializable {
         });
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         column1.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getContractNumberProperty().getValue()).asObject());
-        column2.setCellValueFactory(cellData -> cellData.getValue().getPackages().get(0).getPackageType());
-        column3.setCellValueFactory(cellData -> cellData.getValue().getPackages().get(0).getStartDate());
+        column2.setCellValueFactory(cellData ->
+        {
+            if(cellData.getValue().getPackages().size() != 0)
+            {
+                return cellData.getValue().getPackages().get(0).getPackageType();
+            }
+            return new SimpleStringProperty("");
+        });
+        column3.setCellValueFactory(cellData ->
+        {
+            if(cellData.getValue().getPackages().size() !=0 ) {
+                return cellData.getValue().getPackages().get(0).getStartDate();
+            }
+            return new SimpleStringProperty("");
+        });
         column4.setCellValueFactory(cellData -> cellData.getValue().getDevicesBrief());
         table.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
@@ -196,43 +275,37 @@ public class ContractsController2 implements Initializable {
         addDevice.setOnMouseExited(e -> addDevice.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
         removeDevice.setOnMouseEntered(e -> removeDevice.setStyle(sample.Styles.HOVERED_BUTTON_STYLE));
         removeDevice.setOnMouseExited(e -> removeDevice.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
-        changePackage.setOnMouseEntered(e -> changePackage.setStyle(sample.Styles.HOVERED_BUTTON_STYLE));
-        changePackage.setOnMouseExited(e -> changePackage.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
+        addPackage.setOnMouseEntered(e -> addPackage.setStyle(sample.Styles.HOVERED_BUTTON_STYLE));
+        addPackage.setOnMouseExited(e -> addPackage.setStyle(sample.Styles.IDLE_BUTTON_STYLE));
+        nextButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            FXMLFileLoader.loadFXML(pane, "ContractsPackage/FXMLs/contracts_menu.fxml");
+            event.consume();
+        });
+        nextButton.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
+            nextButton.setImage(new Image("resources/next_coloured.png"));
+            event.consume();
+        });
+        nextButton.addEventHandler(MouseEvent.MOUSE_EXITED, event -> {
+            nextButton.setImage(new Image("resources/next.png"));
+            event.consume();
+        });
     }
 
-    private void initPagination() {
-        int pagesNumber = getProperPageNumber();
+    void addListenerToTextField()
+    {
+        textField.textProperty().addListener((observable, oldValue, newValue) -> doPagination());
+    }
+
+    private void doPagination() {
+        int pagesNumber = getProperPageNumber(ContractsDatabaseHandler.getInstance().getContractsNumber(textField.getText().trim()));
         pagination.setPageCount(pagesNumber);
         pagination.setPageFactory(this::createPage);
     }
 
     private Node createPage(int pageIndex) {
+        Contracts.getContracts().addFullData(pageIndex, rowsPerPage(), textField.getText().trim());
         ObservableList<ContractData> allContracts = Contracts.getContracts().getAllContracts();
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), allContracts.size());
-        table.setItems(FXCollections.observableList(allContracts.subList(fromIndex, toIndex)));
-        return new Pane(table);
-    }
-
-    void addListenerToTextField()
-    {
-        textField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList = new FilteredList(Contracts.getContracts().getAllContracts());
-                filteredList.setPredicate(p -> Integer.toString(p.getContractNumberProperty().getValue()).contains(textField.getText().trim()));
-            doPagination();
-        });
-    }
-
-    private void doPagination() {
-        int pagesNumber = filteredList.size() % rowsPerPage() == 0 ? filteredList.size()/rowsPerPage() : filteredList.size()/rowsPerPage() + 1;
-        pagination.setPageCount(pagesNumber);
-        pagination.setPageFactory(this::createPage2);
-    }
-
-    private Node createPage2(int pageIndex) {
-        int fromIndex = pageIndex * rowsPerPage();
-        int toIndex = Math.min(fromIndex + rowsPerPage(), filteredList.size());
-        table.setItems(FXCollections.observableList(filteredList.subList(fromIndex, toIndex)));
+        table.setItems(allContracts);
         return new Pane(table);
     }
 
@@ -241,10 +314,9 @@ public class ContractsController2 implements Initializable {
         return 16;
     }
 
-    private int getProperPageNumber() {
-        int size = Contracts.getContracts().getSize();
-        int pagesNumber = size / rowsPerPage() + 1;
-        if (size % rowsPerPage() == 0) {
+    private int getProperPageNumber(int rowsNum) {
+        int pagesNumber = rowsNum / rowsPerPage() + 1;
+        if (rowsNum % rowsPerPage() == 0) {
             --pagesNumber;
         }
         return pagesNumber;

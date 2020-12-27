@@ -32,6 +32,14 @@ public class ContractsDatabaseErrorChecker {
             {
                 errorMessage = "Data de start trebuie completata.";
             }
+            else if(error.contains("\"CONTRACTE_PACHETE\".\"DATA_START\""))
+            {
+                errorMessage = "Data de start trebuie completata.";
+            }
+            else if(error.contains("\"DISPOZITIVE\".\"SERIE\""))
+            {
+                errorMessage = "Campul serie trebuie completat.";
+            }
         }
         else if(error.contains("value too large"))
         {
@@ -43,6 +51,14 @@ public class ContractsDatabaseErrorChecker {
         else if(error.contains("CONTRACTE_ADRESA_CONTRACT_UK"))
         {
             errorMessage = "Exista deja un contract la aceasta adresa.";
+        }
+        else if(error.contains("DISPOZITIVE_SERIE_CK"))
+        {
+            errorMessage = "Seria trebuie sa fie formata din 16 caractere.";
+        }
+        else if(error.contains("DISPOZITIVE_SERIE_UK"))
+        {
+            errorMessage = "Dispozitivul cu seria introdusa se afla deja in baza de date.";
         }
     }
 

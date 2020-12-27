@@ -52,16 +52,37 @@ public class Device {
         return id;
     }
 
+    public int getTypeId()
+    {
+        switch(deviceType.getValue().toUpperCase())
+        {
+            case "CARTELA CI":
+                return 1;
+            case "DECODOR":
+                return 2;
+            case "ANTENA SATELIT":
+                return 3;
+            case "ACCES APLICATIE MOBILA":
+                return 4;
+            case "TELEFON NOKIA 1.3":
+                return 5;
+            default:
+                return 0;
+        }
+    }
+
     public String getTypeAbbreviation() {
-        switch (deviceType.getValue()) {
-            case "Cartela CI":
+        switch (deviceType.getValue().toUpperCase()) {
+            case "CARTELA CI":
                 return "CI";
-            case "Decoder":
+            case "DECODOR":
                 return "DEC";
-            case "Antena":
+            case "ANTENA SATELIT":
                 return "AN";
-            case "Aplicatie mobila":
+            case "ACCES APLICATIE MOBILA":
                 return "AM";
+            case "TELEFON NOKIA 1.3":
+                return "TEL";
             default:
                 return "";
         }

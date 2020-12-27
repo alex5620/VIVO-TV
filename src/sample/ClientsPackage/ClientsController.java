@@ -189,20 +189,31 @@ public class ClientsController implements Initializable {
         removeButton.setOnAction(event ->
         {
             ClientData client = table.getSelectionModel().getSelectedItem();
-            if(client!=null) {
-                ClientsDatabaseHandler.getInstance().removeClient(client.getIdProperty().getValue());
-                int currentPage = pagination.getCurrentPageIndex();
-                int pageCount = pagination.getPageCount();
-                int clientsOnPage = Clients.getClients().getSize();
-                textField.setText(" " + textField.getText());
-                textField.setText(textField.getText().substring(1));
-                if (pageCount - 1 == currentPage && clientsOnPage == 1) {
-                    pagination.setCurrentPageIndex(currentPage-1);
-                }
-                else
-                {
-                    pagination.setCurrentPageIndex(currentPage);
-                }
+            if(client!=null)
+            {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Ştergere date client.");
+                alert.setHeaderText("");
+                alert.setContentText("În urma ştergerii clientului va dispărea şi istoricul despre " +
+                        "contractele şi dispozitivele închiriate. Doriţi să continuaţi?");
+                ButtonType yesButton = new ButtonType("Da", ButtonBar.ButtonData.YES);
+                ButtonType noButton = new ButtonType("Nu", ButtonBar.ButtonData.NO);
+                alert.getButtonTypes().setAll(yesButton, noButton);
+                alert.showAndWait().ifPresent(type -> {
+                    if (type == yesButton) {
+                        ClientsDatabaseHandler.getInstance().removeAllClientData(client.getIdProperty().getValue());
+                        int currentPage = pagination.getCurrentPageIndex();
+                        int pageCount = pagination.getPageCount();
+                        int clientsOnPage = Clients.getClients().getSize();
+                        textField.setText(" " + textField.getText());
+                        textField.setText(textField.getText().substring(1));
+                        if (pageCount - 1 == currentPage && clientsOnPage == 1) {
+                            pagination.setCurrentPageIndex(currentPage - 1);
+                        } else {
+                            pagination.setCurrentPageIndex(currentPage);
+                        }
+                    }
+                });
             }
             else
             {

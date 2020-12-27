@@ -16,7 +16,7 @@ public class ContractData {
     private IntegerProperty months;
     private StringProperty billType;
     private ArrayList<Device> devices;
-    private ArrayList<TVPackage> packages;
+    private ArrayList<ContractPackage> packages;
     private StringProperty devicesBrief;
 
     public ContractData()
@@ -130,26 +130,20 @@ public class ContractData {
         devicesBrief.set(builder.toString());
     }
 
-    public void removeDevice(Device device)
-    {
-        devices.remove(device);
-        rewriteDevicesBrief();
-    }
-
-    public void addPackage(TVPackage newTvPackage) {
+    public void addPackage(ContractPackage newContractPackage) {
         if (packages.size() != 0) {
-            TVPackage tvPackage = packages.get(0);
-            TVPackage tvPackage2 = new TVPackage(tvPackage);
-            tvPackage.setPackageType(newTvPackage.getPackageType().getValue());
-            tvPackage.setStartDate(newTvPackage.getStartDate().getValue());
-            tvPackage.setAdditionalPaperNumber(newTvPackage.getAdditionalPaperNumber());
-            packages.add(tvPackage2);
+            ContractPackage contractPackage = packages.get(0);
+            ContractPackage contractPackage2 = new ContractPackage(contractPackage);
+            contractPackage.setPackageType(newContractPackage.getPackageType().getValue());
+            contractPackage.setStartDate(newContractPackage.getStartDate().getValue());
+            contractPackage.setAdditionalPaperNumber(newContractPackage.getAdditionalPaperNumber());
+            packages.add(contractPackage2);
         } else {
-            packages.add(newTvPackage);
+            packages.add(newContractPackage);
         }
     }
 
-    public ArrayList<TVPackage> getPackages()
+    public ArrayList<ContractPackage> getPackages()
     {
         return packages;
     }

@@ -2,9 +2,6 @@ package sample.TVPackages;
 
 import javafx.collections.ObservableList;
 import sample.ChannelsPackage.ChannelData;
-import sample.ChannelsPackage.ChannelsDatabaseHandler;
-import sample.ClientsPackage.ClientsDatabaseErrorChecker;
-import sample.ContractsPackage.TVPackage;
 import sample.DateFormatter;
 
 import java.sql.*;
@@ -259,6 +256,26 @@ public class PackagesDatabaseHandler {
         } finally {
             closeConnection();
         }
+    }
+
+    public ArrayList<String> getPackagesNames() {
+        getConnection();
+        ArrayList<String> packagesNames = null;
+        try {
+            packagesNames = new ArrayList<>();
+            PreparedStatement pStmt = con.prepareStatement("SELECT denumire_pachet FROM pachete");
+            ResultSet res = pStmt.executeQuery();
+            while (res.next()) {
+                packagesNames.add(res.getString(1));
+            }
+            res.close();
+            pStmt.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return packagesNames;
     }
 
     private void closeConnection()

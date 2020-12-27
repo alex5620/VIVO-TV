@@ -11,22 +11,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
-public class RemoveDeviceDialogueController {
+public class RemovePackageDialogueController {
     @FXML ListView listView;
     private ContractData contractData;
-    void addDevices(ContractData contractData)
+    void addPackages(ContractData contractData)
     {
-        ObservableList<Device> list = FXCollections.observableArrayList(contractData.getDevices());
+        ObservableList<ContractPackage> list = FXCollections.observableArrayList(contractData.getPackages());
         listView.setCellFactory(param -> new TableCell());
         listView.setItems(list);
-        if(contractData.getDevicesNumber()>5)
-        {
-            listView.setPrefWidth(listView.getPrefWidth()+12);
-        }
         this.contractData = contractData;
     }
 
-    class TableCell extends ListCell<Device> {
+    class TableCell extends ListCell<ContractPackage> {
         HBox hbox = new HBox();
         Label label = new Label("");
         Pane pane = new Pane();
@@ -36,26 +32,20 @@ public class RemoveDeviceDialogueController {
             hbox.getChildren().addAll(label, pane, button);
             button.setOnAction(event ->
             {
-                ContractsDatabaseHandler.getInstance().removeDevice(getItem().getId().getValue());
+                ContractsDatabaseHandler.getInstance().removePackage(contractData.getContractNumberProperty().getValue(), getItem().getTypeId());
                 getListView().getItems().remove(getItem());
             });
             HBox.setHgrow(pane, Priority.ALWAYS);
         }
 
         @Override
-        protected void updateItem(Device item, boolean empty) {
+        protected void updateItem(ContractPackage item, boolean empty) {
             super.updateItem(item, empty);
             setText(null);
             setGraphic(null);
             if (item != null && !empty) {
-//                if(item.getTypeAbbreviation().equals("AM"))
-//                {
-//                    hbox.getChildren().remove(button);
-//                }
-                String id = Integer.toString(item.getId().getValue());
-                String series = item.getSeries().getValue();
-                String type = item.getDeviceType().getValue();
-                label.setText("ID: "+id+", seria:   "+series+", tip:   "+type);
+                String name = item.getPackageType().getValue();
+                label.setText("Denumire: "+name);
                 setGraphic(hbox);
             }
         }
